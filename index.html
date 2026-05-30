@@ -1,121 +1,499 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BarberCRM</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EVO — Performance Dashboard</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            chalk: '#F6F4F1',
+            basmati: '#EBE1C9',
+            celestial: '#0A2538',
+            coral: '#F34723',
+            surf: '#AEC3C4',
+            ruby: '#841B2D',
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          boxShadow: {
+            premium: '0 8px 30px rgb(0 0 0 / 0.03)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      overscroll-behavior-y: none;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
 </head>
-<body>
 
-<div class="sidebar">
-  <h1>BarberCRM</h1>
+<body class="bg-chalk font-sans text-celestial min-h-screen">
 
-  <button onclick="showSection('dashboard')">Dashboard</button>
-  <button onclick="showSection('clientes')">Clientes</button>
-  <button onclick="showSection('financeiro')">Financeiro</button>
-  <button onclick="showSection('crm')">CRM WhatsApp</button>
-</div>
+  <main class="max-w-md mx-auto pb-32">
 
-<div class="main">
+    <!-- HEADER -->
+    <section class="bg-celestial rounded-b-[42px] px-6 pt-7 pb-28 relative overflow-hidden">
 
-  <section id="dashboard" class="section active">
-    <div class="top">
-      <h2>Dashboard</h2>
-      <button onclick="abrirModal()">Novo Cliente</button>
+      <!-- Glow -->
+      <div class="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+
+      <!-- Top -->
+      <div class="flex items-center justify-between relative z-10">
+
+        <div>
+          <p class="text-surf text-sm font-medium">
+            Olá, Marcus
+          </p>
+
+          <h1 class="text-white text-2xl font-bold mt-1 tracking-tight">
+            Sua evolução hoje
+          </h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+
+          <!-- Settings -->
+          <button class="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317a1.724 1.724 0 013.35 0 1.724 1.724 0 002.573 1.066 1.724 1.724 0 012.462 2.462 1.724 1.724 0 001.065 2.572 1.724 1.724 0 010 3.35 1.724 1.724 0 00-1.065 2.573 1.724 1.724 0 01-2.462 2.462 1.724 1.724 0 00-2.573 1.065 1.724 1.724 0 01-3.35 0 1.724 1.724 0 00-2.572-1.065 1.724 1.724 0 01-2.462-2.462 1.724 1.724 0 00-1.066-2.573 1.724 1.724 0 010-3.35 1.724 1.724 0 001.066-2.572 1.724 1.724 0 012.462-2.462 1.724 1.724 0 002.572-1.066z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </button>
+
+          <!-- Profile -->
+          <button class="w-11 h-11 rounded-2xl overflow-hidden border border-white/10">
+            <div class="w-full h-full bg-gradient-to-br from-coral to-orange-300 flex items-center justify-center text-white font-bold">
+              M
+            </div>
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Calories -->
+      <div class="mt-12 relative z-10">
+
+        <p class="text-surf text-sm font-medium mb-3">
+          Meta Calórica Diária
+        </p>
+
+        <div class="flex items-end gap-2">
+          <h2 class="text-white text-5xl font-extrabold tracking-tight leading-none">
+            2.400
+          </h2>
+
+          <span class="text-surf text-lg mb-1">
+            kcal
+          </span>
+        </div>
+
+        <!-- Progress -->
+        <div class="mt-7">
+
+          <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+            <div class="h-full w-[78%] bg-coral rounded-full"></div>
+          </div>
+
+          <div class="flex justify-between mt-3 text-xs text-surf">
+            <span>1.875 consumidas</span>
+            <span>78%</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Floating AI Card -->
+      <div class="absolute left-5 right-5 -bottom-14 z-20">
+
+        <div class="bg-white rounded-3xl shadow-premium p-5 border border-black/[0.03]">
+
+          <div class="flex gap-4 items-start">
+
+            <div class="w-11 h-11 rounded-2xl bg-coral/10 flex items-center justify-center shrink-0">
+              <span class="text-xl">✨</span>
+            </div>
+
+            <div>
+              <p class="text-celestial text-sm leading-relaxed font-medium">
+                Seu consumo de proteínas está excelente hoje. Tudo pronto para buscar a progressão de cargas na Série A (Peito e Tríceps) hoje na LIFEFIT?
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CONTENT -->
+    <section class="px-5 pt-24 space-y-7">
+
+      <!-- MACROS -->
+      <div>
+
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold tracking-tight">
+            Macros do Dia
+          </h3>
+
+          <button class="text-sm text-coral font-semibold">
+            Ver detalhes
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+
+          <!-- Protein -->
+          <div class="bg-white rounded-3xl p-4 shadow-premium border border-black/[0.03]">
+
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-500 font-medium">
+                Proteína
+              </span>
+
+              <span class="text-[11px] text-coral font-bold">
+                78%
+              </span>
+            </div>
+
+            <div class="mt-5 h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full w-[78%] bg-coral rounded-full"></div>
+            </div>
+
+            <p class="mt-4 text-sm font-bold text-celestial">
+              140g
+            </p>
+
+            <p class="text-xs text-slate-500">
+              de 180g
+            </p>
+
+          </div>
+
+          <!-- Carbs -->
+          <div class="bg-white rounded-3xl p-4 shadow-premium border border-black/[0.03]">
+
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-500 font-medium">
+                Carbo
+              </span>
+
+              <span class="text-[11px] text-coral font-bold">
+                64%
+              </span>
+            </div>
+
+            <div class="mt-5 h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full w-[64%] bg-coral rounded-full"></div>
+            </div>
+
+            <p class="mt-4 text-sm font-bold text-celestial">
+              210g
+            </p>
+
+            <p class="text-xs text-slate-500">
+              de 330g
+            </p>
+
+          </div>
+
+          <!-- Fat -->
+          <div class="bg-white rounded-3xl p-4 shadow-premium border border-black/[0.03]">
+
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-500 font-medium">
+                Gordura
+              </span>
+
+              <span class="text-[11px] text-coral font-bold">
+                52%
+              </span>
+            </div>
+
+            <div class="mt-5 h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full w-[52%] bg-coral rounded-full"></div>
+            </div>
+
+            <p class="mt-4 text-sm font-bold text-celestial">
+              47g
+            </p>
+
+            <p class="text-xs text-slate-500">
+              de 90g
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- TRAINING -->
+      <div>
+
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold tracking-tight">
+            Próximo Treino
+          </h3>
+
+          <span class="text-sm text-slate-500">
+            Hoje • 19:00
+          </span>
+        </div>
+
+        <div class="bg-basmati rounded-[30px] p-6 shadow-premium relative overflow-hidden">
+
+          <div class="absolute top-0 right-0 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
+
+          <div class="relative z-10">
+
+            <div class="inline-flex items-center gap-2 bg-white/60 backdrop-blur px-3 py-2 rounded-full text-xs font-semibold text-celestial">
+              <span class="w-2 h-2 rounded-full bg-coral"></span>
+              Progressão de carga ativa
+            </div>
+
+            <h4 class="text-2xl font-extrabold tracking-tight mt-5 leading-tight">
+              Série A — Força & Hipertrofia
+            </h4>
+
+            <div class="mt-6 space-y-3">
+
+              <div class="flex items-center justify-between bg-white/50 rounded-2xl px-4 py-3">
+                <span class="font-medium text-sm">
+                  Supino Reto
+                </span>
+
+                <span class="text-xs text-slate-500">
+                  4x8 • +2kg
+                </span>
+              </div>
+
+              <div class="flex items-center justify-between bg-white/50 rounded-2xl px-4 py-3">
+                <span class="font-medium text-sm">
+                  Desenvolvimento Halteres
+                </span>
+
+                <span class="text-xs text-slate-500">
+                  3x10
+                </span>
+              </div>
+
+              <div class="flex items-center justify-between bg-white/50 rounded-2xl px-4 py-3">
+                <span class="font-medium text-sm">
+                  Tríceps Corda
+                </span>
+
+                <span class="text-xs text-slate-500">
+                  3x12
+                </span>
+              </div>
+
+            </div>
+
+            <button class="mt-7 w-full bg-coral text-white font-bold py-4 rounded-2xl shadow-premium active:scale-[0.99] transition">
+              Iniciar Treino
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- CONSISTENCY -->
+      <div>
+
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold tracking-tight">
+            Consistência da Semana
+          </h3>
+
+          <span class="text-sm text-slate-500">
+            5 de 7 dias
+          </span>
+        </div>
+
+        <div class="bg-white rounded-[30px] p-5 shadow-premium border border-black/[0.03]">
+
+          <div class="grid grid-cols-7 gap-3 text-center">
+
+            <!-- Day -->
+            <div class="space-y-3">
+              <span class="text-xs text-slate-400 font-semibold">S</span>
+              <div class="w-11 h-11 rounded-2xl bg-coral text-white flex items-center justify-center mx-auto">
+                ✓
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs text-slate-400 font-semibold">T</span>
+              <div class="w-11 h-11 rounded-2xl bg-coral text-white flex items-center justify-center mx-auto">
+                ✓
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs text-slate-400 font-semibold">Q</span>
+              <div class="w-11 h-11 rounded-2xl bg-coral text-white flex items-center justify-center mx-auto">
+                ✓
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs text-slate-400 font-semibold">Q</span>
+              <div class="w-11 h-11 rounded-2xl bg-coral/15 text-coral flex items-center justify-center mx-auto">
+                •
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs text-slate-400 font-semibold">S</span>
+              <div class="w-11 h-11 rounded-2xl bg-coral text-white flex items-center justify-center mx-auto">
+                ✓
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs text-slate-400 font-semibold">S</span>
+              <div class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-300 flex items-center justify-center mx-auto">
+                —
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs text-slate-400 font-semibold">D</span>
+              <div class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-300 flex items-center justify-center mx-auto">
+                —
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="fixed bottom-0 left-0 right-0 z-50">
+
+    <div class="max-w-md mx-auto px-5 pb-5">
+
+      <div class="bg-white/80 backdrop-blur-2xl border border-black/[0.03] rounded-[32px] shadow-premium px-4 py-3">
+
+        <div class="grid grid-cols-5 items-center">
+
+          <!-- Home -->
+          <button class="flex flex-col items-center gap-1 text-coral">
+
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.75L12 3l9 7.75"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 9.5V20h14V9.5"/>
+            </svg>
+
+            <span class="text-[11px] font-semibold">
+              Início
+            </span>
+
+          </button>
+
+          <!-- Workout -->
+          <button class="flex flex-col items-center gap-1 text-slate-400">
+
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 10v4"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20 10v4"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 7v10"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 7v10"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16"/>
+            </svg>
+
+            <span class="text-[11px] font-medium">
+              Treinos
+            </span>
+
+          </button>
+
+          <!-- Center -->
+          <button class="flex items-center justify-center">
+
+            <div class="w-16 h-16 rounded-3xl bg-coral text-white shadow-premium flex items-center justify-center -mt-10 border-8 border-chalk">
+
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/>
+              </svg>
+
+            </div>
+
+          </button>
+
+          <!-- Diet -->
+          <button class="flex flex-col items-center gap-1 text-slate-400">
+
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c4.97-4.97 7-8.25 7-11a7 7 0 10-14 0c0 2.75 2.03 6.03 7 11z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 13a3 3 0 100-6 3 3 0 000 6z"/>
+            </svg>
+
+            <span class="text-[11px] font-medium">
+              Dieta
+            </span>
+
+          </button>
+
+          <!-- Evolution -->
+          <button class="flex flex-col items-center gap-1 text-slate-400">
+
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 19V9"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 19v-7"/>
+            </svg>
+
+            <span class="text-[11px] font-medium">
+              Evolução
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="cards">
-      <div class="card">
-        <h3>Clientes</h3>
-        <p id="clientesTotal">0</p>
-      </div>
+  </nav>
 
-      <div class="card">
-        <h3>Faturamento</h3>
-        <p id="faturamento">R$ 0</p>
-      </div>
-
-      <div class="card">
-        <h3>Cortes</h3>
-        <p id="cortes">0</p>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>Clientes Recentes</h3>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Barbeiro</th>
-            <th>Último Corte</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-
-        <tbody id="clientesTabela"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="clientes" class="section">
-    <div class="panel">
-      <h3>Área de Clientes</h3>
-      <p>Gerencie clientes, aniversários e frequência.</p>
-    </div>
-  </section>
-
-  <section id="financeiro" class="section">
-    <div class="panel">
-      <h3>Financeiro</h3>
-      <p>Visualize entradas e faturamento da barbearia.</p>
-    </div>
-  </section>
-
-  <section id="crm" class="section">
-    <div class="panel">
-      <h3>Automação WhatsApp</h3>
-
-      <div class="crm-item">
-        <input type="checkbox">
-        <label>Lembrete de agendamento</label>
-      </div>
-
-      <div class="crm-item">
-        <input type="checkbox">
-        <label>Mensagem de aniversário</label>
-      </div>
-
-      <div class="crm-item">
-        <input type="checkbox">
-        <label>Reativação após 30 dias</label>
-      </div>
-
-      <div class="crm-item">
-        <input type="checkbox">
-        <label>Aviso ao barbeiro sobre aniversário</label>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h3>Novo Cliente</h3>
-
-    <input type="text" id="nome" placeholder="Nome">
-    <input type="text" id="barbeiro" placeholder="Barbeiro">
-    <input type="text" id="corte" placeholder="Último corte">
-
-    <button onclick="adicionarCliente()">Salvar</button>
-    <button onclick="fecharModal()">Fechar</button>
-  </div>
-</div>
-
-<script src="script.js"></script>
 </body>
 </html>
