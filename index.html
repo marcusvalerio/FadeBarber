@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarberCRM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <h1>BarberCRM</h1>
+
+  <button onclick="showSection('dashboard')">Dashboard</button>
+  <button onclick="showSection('clientes')">Clientes</button>
+  <button onclick="showSection('financeiro')">Financeiro</button>
+  <button onclick="showSection('crm')">CRM WhatsApp</button>
+</div>
+
+<div class="main">
+
+  <section id="dashboard" class="section active">
+    <div class="top">
+      <h2>Dashboard</h2>
+      <button onclick="abrirModal()">Novo Cliente</button>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Clientes</h3>
+        <p id="clientesTotal">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Faturamento</h3>
+        <p id="faturamento">R$ 0</p>
+      </div>
+
+      <div class="card">
+        <h3>Cortes</h3>
+        <p id="cortes">0</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Clientes Recentes</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Barbeiro</th>
+            <th>Último Corte</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody id="clientesTabela"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="clientes" class="section">
+    <div class="panel">
+      <h3>Área de Clientes</h3>
+      <p>Gerencie clientes, aniversários e frequência.</p>
+    </div>
+  </section>
+
+  <section id="financeiro" class="section">
+    <div class="panel">
+      <h3>Financeiro</h3>
+      <p>Visualize entradas e faturamento da barbearia.</p>
+    </div>
+  </section>
+
+  <section id="crm" class="section">
+    <div class="panel">
+      <h3>Automação WhatsApp</h3>
+
+      <div class="crm-item">
+        <input type="checkbox">
+        <label>Lembrete de agendamento</label>
+      </div>
+
+      <div class="crm-item">
+        <input type="checkbox">
+        <label>Mensagem de aniversário</label>
+      </div>
+
+      <div class="crm-item">
+        <input type="checkbox">
+        <label>Reativação após 30 dias</label>
+      </div>
+
+      <div class="crm-item">
+        <input type="checkbox">
+        <label>Aviso ao barbeiro sobre aniversário</label>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>Novo Cliente</h3>
+
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="text" id="barbeiro" placeholder="Barbeiro">
+    <input type="text" id="corte" placeholder="Último corte">
+
+    <button onclick="adicionarCliente()">Salvar</button>
+    <button onclick="fecharModal()">Fechar</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
