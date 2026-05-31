@@ -2,498 +2,691 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EVO — Performance Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BarberOS — CRM Premium para Barbearias</title>
 
-  <!-- Google Font -->
+  <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            chalk: '#F6F4F1',
-            basmati: '#EBE1C9',
-            celestial: '#0A2538',
-            coral: '#F34723',
-            surf: '#AEC3C4',
-            ruby: '#841B2D',
-          },
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-          },
-          boxShadow: {
-            premium: '0 8px 30px rgb(0 0 0 / 0.03)',
-          }
-        }
-      }
-    }
-  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <style>
     * {
-      -webkit-tap-highlight-color: transparent;
+      font-family: 'Inter', sans-serif;
     }
 
     body {
-      overscroll-behavior-y: none;
+      background: #0A0A0A;
+      color: white;
+      overflow-x: hidden;
     }
 
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
+    .glass {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .card {
+      background: #141414;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .card-2 {
+      background: #1A1A1A;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .gradient-glow {
+      background: radial-gradient(circle at top right, rgba(52,211,153,0.12), transparent 40%);
+    }
+
+    .metric-glow {
+      box-shadow: 0 0 40px rgba(52,211,153,0.08);
+    }
+
+    .sidebar-item.active {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .fade-up {
+      animation: fadeUp .4s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,.08);
+      border-radius: 999px;
     }
   </style>
 </head>
 
-<body class="bg-chalk font-sans text-celestial min-h-screen">
+<body class="min-h-screen">
 
-  <main class="max-w-md mx-auto pb-32">
+  <div class="flex h-screen overflow-hidden">
 
-    <!-- HEADER -->
-    <section class="bg-celestial rounded-b-[42px] px-6 pt-7 pb-28 relative overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside class="hidden md:flex flex-col w-24 border-r border-white/5 bg-black/30 backdrop-blur-xl items-center py-8 justify-between">
 
-      <!-- Glow -->
-      <div class="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+      <div class="space-y-8 w-full flex flex-col items-center">
 
-      <!-- Top -->
-      <div class="flex items-center justify-between relative z-10">
+        <div class="w-14 h-14 rounded-2xl bg-white text-black flex items-center justify-center font-bold text-xl">
+          B
+        </div>
+
+        <nav class="flex flex-col gap-4 mt-10">
+
+          <button class="sidebar-item active transition-all w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-white/10">
+            <i data-lucide="layout-dashboard"></i>
+          </button>
+
+          <button class="sidebar-item transition-all w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-white/10">
+            <i data-lucide="calendar-days"></i>
+          </button>
+
+          <button class="sidebar-item transition-all w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-white/10">
+            <i data-lucide="users"></i>
+          </button>
+
+          <button class="sidebar-item transition-all w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-white/10">
+            <i data-lucide="wallet"></i>
+          </button>
+
+        </nav>
+
+      </div>
+
+      <div class="w-14 h-14 rounded-2xl bg-[#1A1A1A] flex items-center justify-center border border-white/5">
+        <i data-lucide="settings-2"></i>
+      </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="flex-1 overflow-y-auto gradient-glow">
+
+      <!-- HEADER -->
+      <header class="px-6 md:px-12 pt-10 pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 
         <div>
-          <p class="text-surf text-sm font-medium">
-            Olá, Marcus
+          <p class="text-white/40 text-sm mb-2">
+            BarberOS Dashboard
           </p>
 
-          <h1 class="text-white text-2xl font-bold mt-1 tracking-tight">
-            Sua evolução hoje
+          <h1 class="text-4xl font-semibold tracking-tight">
+            Sua barbearia, em tempo real.
           </h1>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4">
 
-          <!-- Settings -->
-          <button class="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317a1.724 1.724 0 013.35 0 1.724 1.724 0 002.573 1.066 1.724 1.724 0 012.462 2.462 1.724 1.724 0 001.065 2.572 1.724 1.724 0 010 3.35 1.724 1.724 0 00-1.065 2.573 1.724 1.724 0 01-2.462 2.462 1.724 1.724 0 00-2.573 1.065 1.724 1.724 0 01-3.35 0 1.724 1.724 0 00-2.572-1.065 1.724 1.724 0 01-2.462-2.462 1.724 1.724 0 00-1.066-2.573 1.724 1.724 0 010-3.35 1.724 1.724 0 001.066-2.572 1.724 1.724 0 012.462-2.462 1.724 1.724 0 002.572-1.066z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
+          <button class="card px-5 py-3 rounded-2xl hover:bg-white/5 transition-all flex items-center gap-2">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            Notificações
           </button>
 
-          <!-- Profile -->
-          <button class="w-11 h-11 rounded-2xl overflow-hidden border border-white/10">
-            <div class="w-full h-full bg-gradient-to-br from-coral to-orange-300 flex items-center justify-center text-white font-bold">
-              M
-            </div>
-          </button>
+          <div class="w-12 h-12 rounded-2xl overflow-hidden border border-white/10">
+            <img
+              src="https://i.pravatar.cc/100?img=12"
+              class="w-full h-full object-cover"
+            />
+          </div>
 
         </div>
 
-      </div>
+      </header>
 
-      <!-- Calories -->
-      <div class="mt-12 relative z-10">
+      <!-- CONTENT -->
+      <section class="px-6 md:px-12 pb-28">
 
-        <p class="text-surf text-sm font-medium mb-3">
-          Meta Calórica Diária
-        </p>
+        <!-- METRICS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-        <div class="flex items-end gap-2">
-          <h2 class="text-white text-5xl font-extrabold tracking-tight leading-none">
-            2.400
+          <div class="card metric-glow rounded-[28px] p-6 fade-up">
+
+            <div class="flex items-center justify-between">
+
+              <div>
+                <p class="text-white/40 text-sm">
+                  Faturamento do Mês
+                </p>
+
+                <h2 class="text-3xl font-semibold mt-3">
+                  R$ 18.420
+                </h2>
+              </div>
+
+              <div class="w-14 h-14 rounded-2xl bg-emerald-400/10 flex items-center justify-center text-emerald-400">
+                <i data-lucide="trending-up"></i>
+              </div>
+
+            </div>
+
+            <div class="mt-6 text-emerald-400 text-sm">
+              +12.4% vs mês anterior
+            </div>
+
+          </div>
+
+          <div class="card rounded-[28px] p-6 fade-up">
+
+            <div class="flex items-center justify-between">
+
+              <div>
+                <p class="text-white/40 text-sm">
+                  Cortes Realizados
+                </p>
+
+                <h2 class="text-3xl font-semibold mt-3">
+                  286
+                </h2>
+              </div>
+
+              <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
+                <i data-lucide="scissors"></i>
+              </div>
+
+            </div>
+
+            <div class="mt-6 text-white/50 text-sm">
+              Média de 9.2 por dia
+            </div>
+
+          </div>
+
+          <div class="card rounded-[28px] p-6 fade-up">
+
+            <div class="flex items-center justify-between">
+
+              <div>
+                <p class="text-white/40 text-sm">
+                  Retenção
+                </p>
+
+                <h2 class="text-3xl font-semibold mt-3">
+                  87%
+                </h2>
+              </div>
+
+              <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
+                <i data-lucide="heart-handshake"></i>
+              </div>
+
+            </div>
+
+            <div class="mt-6 text-emerald-400 text-sm">
+              Excelente fidelização
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- AGENDA -->
+        <div class="mt-10 grid grid-cols-1 xl:grid-cols-[1.4fr_0.6fr] gap-6">
+
+          <!-- LIST -->
+          <div class="card rounded-[32px] p-7">
+
+            <div class="flex items-center justify-between mb-8">
+
+              <div>
+                <h3 class="text-2xl font-semibold">
+                  Agenda do Dia
+                </h3>
+
+                <p class="text-white/40 mt-1">
+                  Atualização em tempo real via Firebase
+                </p>
+              </div>
+
+              <div class="flex items-center gap-2 text-emerald-400 text-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                Live
+              </div>
+
+            </div>
+
+            <div
+              id="appointments"
+              class="space-y-4"
+            ></div>
+
+          </div>
+
+          <!-- SIDE INSIGHTS -->
+          <div class="space-y-6">
+
+            <div class="card rounded-[32px] p-6">
+
+              <div class="flex items-center justify-between mb-5">
+
+                <div>
+                  <h3 class="text-xl font-semibold">
+                    Clientes VIP
+                  </h3>
+
+                  <p class="text-white/40 text-sm mt-1">
+                    Mais recorrentes
+                  </p>
+                </div>
+
+                <i data-lucide="crown" class="text-amber-300"></i>
+
+              </div>
+
+              <div class="space-y-4">
+
+                <div class="flex items-center gap-3">
+                  <img src="https://i.pravatar.cc/100?img=14" class="w-12 h-12 rounded-2xl"/>
+                  <div>
+                    <p class="font-medium">Lucas Andrade</p>
+                    <p class="text-white/40 text-sm">12 visitas</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <img src="https://i.pravatar.cc/100?img=32" class="w-12 h-12 rounded-2xl"/>
+                  <div>
+                    <p class="font-medium">Pedro Moraes</p>
+                    <p class="text-white/40 text-sm">9 visitas</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="card rounded-[32px] p-6">
+
+              <div class="flex items-center justify-between">
+
+                <div>
+                  <h3 class="text-xl font-semibold">
+                    CRM Inteligente
+                  </h3>
+
+                  <p class="text-white/40 text-sm mt-1">
+                    Automação emocional
+                  </p>
+                </div>
+
+                <i data-lucide="sparkles"></i>
+
+              </div>
+
+              <div class="mt-6 space-y-4 text-sm">
+
+                <div class="bg-white/[0.03] rounded-2xl p-4 border border-white/5">
+                  3 clientes fazem aniversário esta semana.
+                </div>
+
+                <div class="bg-white/[0.03] rounded-2xl p-4 border border-white/5">
+                  6 clientes estão há +30 dias sem retornar.
+                </div>
+
+                <div class="bg-emerald-400/10 rounded-2xl p-4 border border-emerald-400/10 text-emerald-300">
+                  Potencial de reativação: +R$ 2.400
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- MOBILE NAV -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/5 px-6 py-4 flex items-center justify-between z-50">
+
+    <button class="text-white">
+      <i data-lucide="layout-dashboard"></i>
+    </button>
+
+    <button class="text-white/40">
+      <i data-lucide="calendar-days"></i>
+    </button>
+
+    <button class="text-white/40">
+      <i data-lucide="users"></i>
+    </button>
+
+    <button class="text-white/40">
+      <i data-lucide="wallet"></i>
+    </button>
+
+  </nav>
+
+  <!-- MODAL -->
+  <div
+    id="modal"
+    class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-6"
+  >
+
+    <div class="card rounded-[32px] w-full max-w-lg p-8">
+
+      <div class="flex items-center justify-between mb-6">
+
+        <div>
+          <h2 class="text-2xl font-semibold">
+            Automação CRM
           </h2>
 
-          <span class="text-surf text-lg mb-1">
-            kcal
-          </span>
+          <p class="text-white/40 mt-1">
+            Mensagem premium pronta
+          </p>
         </div>
 
-        <!-- Progress -->
-        <div class="mt-7">
-
-          <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-            <div class="h-full w-[78%] bg-coral rounded-full"></div>
-          </div>
-
-          <div class="flex justify-between mt-3 text-xs text-surf">
-            <span>1.875 consumidas</span>
-            <span>78%</span>
-          </div>
-
-        </div>
+        <button onclick="closeModal()">
+          <i data-lucide="x"></i>
+        </button>
 
       </div>
 
-      <!-- Floating AI Card -->
-      <div class="absolute left-5 right-5 -bottom-14 z-20">
-
-        <div class="bg-white rounded-3xl shadow-premium p-5 border border-black/[0.03]">
-
-          <div class="flex gap-4 items-start">
-
-            <div class="w-11 h-11 rounded-2xl bg-coral/10 flex items-center justify-center shrink-0">
-              <span class="text-xl">✨</span>
-            </div>
-
-            <div>
-              <p class="text-celestial text-sm leading-relaxed font-medium">
-                Seu consumo de proteínas está excelente hoje. Tudo pronto para buscar a progressão de cargas na Série A (Peito e Tríceps) hoje na LIFEFIT?
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- CONTENT -->
-    <section class="px-5 pt-24 space-y-7">
-
-      <!-- MACROS -->
-      <div>
-
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold tracking-tight">
-            Macros do Dia
-          </h3>
-
-          <button class="text-sm text-coral font-semibold">
-            Ver detalhes
-          </button>
-        </div>
-
-        <div class="grid grid-cols-3 gap-3">
-
-          <!-- Protein -->
-          <div class="bg-white rounded-3xl p-4 shadow-premium border border-black/[0.03]">
-
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-500 font-medium">
-                Proteína
-              </span>
-
-              <span class="text-[11px] text-coral font-bold">
-                78%
-              </span>
-            </div>
-
-            <div class="mt-5 h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div class="h-full w-[78%] bg-coral rounded-full"></div>
-            </div>
-
-            <p class="mt-4 text-sm font-bold text-celestial">
-              140g
-            </p>
-
-            <p class="text-xs text-slate-500">
-              de 180g
-            </p>
-
-          </div>
-
-          <!-- Carbs -->
-          <div class="bg-white rounded-3xl p-4 shadow-premium border border-black/[0.03]">
-
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-500 font-medium">
-                Carbo
-              </span>
-
-              <span class="text-[11px] text-coral font-bold">
-                64%
-              </span>
-            </div>
-
-            <div class="mt-5 h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div class="h-full w-[64%] bg-coral rounded-full"></div>
-            </div>
-
-            <p class="mt-4 text-sm font-bold text-celestial">
-              210g
-            </p>
-
-            <p class="text-xs text-slate-500">
-              de 330g
-            </p>
-
-          </div>
-
-          <!-- Fat -->
-          <div class="bg-white rounded-3xl p-4 shadow-premium border border-black/[0.03]">
-
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-500 font-medium">
-                Gordura
-              </span>
-
-              <span class="text-[11px] text-coral font-bold">
-                52%
-              </span>
-            </div>
-
-            <div class="mt-5 h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div class="h-full w-[52%] bg-coral rounded-full"></div>
-            </div>
-
-            <p class="mt-4 text-sm font-bold text-celestial">
-              47g
-            </p>
-
-            <p class="text-xs text-slate-500">
-              de 90g
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- TRAINING -->
-      <div>
-
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold tracking-tight">
-            Próximo Treino
-          </h3>
-
-          <span class="text-sm text-slate-500">
-            Hoje • 19:00
-          </span>
-        </div>
-
-        <div class="bg-basmati rounded-[30px] p-6 shadow-premium relative overflow-hidden">
-
-          <div class="absolute top-0 right-0 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
-
-          <div class="relative z-10">
-
-            <div class="inline-flex items-center gap-2 bg-white/60 backdrop-blur px-3 py-2 rounded-full text-xs font-semibold text-celestial">
-              <span class="w-2 h-2 rounded-full bg-coral"></span>
-              Progressão de carga ativa
-            </div>
-
-            <h4 class="text-2xl font-extrabold tracking-tight mt-5 leading-tight">
-              Série A — Força & Hipertrofia
-            </h4>
-
-            <div class="mt-6 space-y-3">
-
-              <div class="flex items-center justify-between bg-white/50 rounded-2xl px-4 py-3">
-                <span class="font-medium text-sm">
-                  Supino Reto
-                </span>
-
-                <span class="text-xs text-slate-500">
-                  4x8 • +2kg
-                </span>
-              </div>
-
-              <div class="flex items-center justify-between bg-white/50 rounded-2xl px-4 py-3">
-                <span class="font-medium text-sm">
-                  Desenvolvimento Halteres
-                </span>
-
-                <span class="text-xs text-slate-500">
-                  3x10
-                </span>
-              </div>
-
-              <div class="flex items-center justify-between bg-white/50 rounded-2xl px-4 py-3">
-                <span class="font-medium text-sm">
-                  Tríceps Corda
-                </span>
-
-                <span class="text-xs text-slate-500">
-                  3x12
-                </span>
-              </div>
-
-            </div>
-
-            <button class="mt-7 w-full bg-coral text-white font-bold py-4 rounded-2xl shadow-premium active:scale-[0.99] transition">
-              Iniciar Treino
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- CONSISTENCY -->
-      <div>
-
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold tracking-tight">
-            Consistência da Semana
-          </h3>
-
-          <span class="text-sm text-slate-500">
-            5 de 7 dias
-          </span>
-        </div>
-
-        <div class="bg-white rounded-[30px] p-5 shadow-premium border border-black/[0.03]">
-
-          <div class="grid grid-cols-7 gap-3 text-center">
-
-            <!-- Day -->
-            <div class="space-y-3">
-              <span class="text-xs text-slate-400 font-semibold">S</span>
-              <div class="w-11 h-11 rounded-2xl bg-coral text-white flex items-center justify-center mx-auto">
-                ✓
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <span class="text-xs text-slate-400 font-semibold">T</span>
-              <div class="w-11 h-11 rounded-2xl bg-coral text-white flex items-center justify-center mx-auto">
-                ✓
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <span class="text-xs text-slate-400 font-semibold">Q</span>
-              <div class="w-11 h-11 rounded-2xl bg-coral text-white flex items-center justify-center mx-auto">
-                ✓
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <span class="text-xs text-slate-400 font-semibold">Q</span>
-              <div class="w-11 h-11 rounded-2xl bg-coral/15 text-coral flex items-center justify-center mx-auto">
-                •
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <span class="text-xs text-slate-400 font-semibold">S</span>
-              <div class="w-11 h-11 rounded-2xl bg-coral text-white flex items-center justify-center mx-auto">
-                ✓
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <span class="text-xs text-slate-400 font-semibold">S</span>
-              <div class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-300 flex items-center justify-center mx-auto">
-                —
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <span class="text-xs text-slate-400 font-semibold">D</span>
-              <div class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-300 flex items-center justify-center mx-auto">
-                —
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- BOTTOM NAV -->
-  <nav class="fixed bottom-0 left-0 right-0 z-50">
-
-    <div class="max-w-md mx-auto px-5 pb-5">
-
-      <div class="bg-white/80 backdrop-blur-2xl border border-black/[0.03] rounded-[32px] shadow-premium px-4 py-3">
-
-        <div class="grid grid-cols-5 items-center">
-
-          <!-- Home -->
-          <button class="flex flex-col items-center gap-1 text-coral">
-
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.75L12 3l9 7.75"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 9.5V20h14V9.5"/>
-            </svg>
-
-            <span class="text-[11px] font-semibold">
-              Início
-            </span>
-
-          </button>
-
-          <!-- Workout -->
-          <button class="flex flex-col items-center gap-1 text-slate-400">
-
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 10v4"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M20 10v4"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 7v10"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 7v10"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16"/>
-            </svg>
-
-            <span class="text-[11px] font-medium">
-              Treinos
-            </span>
-
-          </button>
-
-          <!-- Center -->
-          <button class="flex items-center justify-center">
-
-            <div class="w-16 h-16 rounded-3xl bg-coral text-white shadow-premium flex items-center justify-center -mt-10 border-8 border-chalk">
-
-              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/>
-              </svg>
-
-            </div>
-
-          </button>
-
-          <!-- Diet -->
-          <button class="flex flex-col items-center gap-1 text-slate-400">
-
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c4.97-4.97 7-8.25 7-11a7 7 0 10-14 0c0 2.75 2.03 6.03 7 11z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 13a3 3 0 100-6 3 3 0 000 6z"/>
-            </svg>
-
-            <span class="text-[11px] font-medium">
-              Dieta
-            </span>
-
-          </button>
-
-          <!-- Evolution -->
-          <button class="flex flex-col items-center gap-1 text-slate-400">
-
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 19V9"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 19v-7"/>
-            </svg>
-
-            <span class="text-[11px] font-medium">
-              Evolução
-            </span>
-
-          </button>
-
-        </div>
+      <div
+        id="modalMessage"
+        class="bg-white/[0.03] border border-white/5 rounded-2xl p-5 text-white/80 leading-relaxed"
+      ></div>
+
+      <div class="mt-6 flex gap-3">
+
+        <button
+          onclick="sendWhatsApp()"
+          class="flex-1 bg-white text-black rounded-2xl py-4 font-medium hover:scale-[1.01] transition-all"
+        >
+          Abrir WhatsApp
+        </button>
+
+        <button
+          onclick="closeModal()"
+          class="px-6 rounded-2xl border border-white/10 hover:bg-white/5 transition-all"
+        >
+          Fechar
+        </button>
 
       </div>
 
     </div>
 
-  </nav>
+  </div>
+
+  <script>
+
+    lucide.createIcons();
+
+    // ==========================
+    // FIREBASE CONFIG
+    // ==========================
+
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_PROJETO.firebaseapp.com",
+      projectId: "SEU_PROJECT_ID",
+      storageBucket: "SEU_PROJETO.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+
+    // ==========================
+    // COLLECTIONS
+    // ==========================
+
+    const clientesRef = db.collection("clientes");
+    const agendamentosRef = db.collection("agendamentos");
+
+    // ==========================
+    // MOCK DATA (fallback)
+    // ==========================
+
+    const mockAppointments = [
+      {
+        nome: "Lucas Andrade",
+        horario: "09:00",
+        servico: "Corte + Barba",
+        telefone: "5521999999999",
+        vip: true,
+        avatar: "https://i.pravatar.cc/100?img=12",
+        ultimaVisita: 5
+      },
+      {
+        nome: "Pedro Moraes",
+        horario: "10:30",
+        servico: "Mid Fade",
+        telefone: "5521988888888",
+        vip: false,
+        avatar: "https://i.pravatar.cc/100?img=32",
+        ultimaVisita: 40
+      },
+      {
+        nome: "Rafael Costa",
+        horario: "13:00",
+        servico: "Corte Social",
+        telefone: "5521977777777",
+        vip: true,
+        avatar: "https://i.pravatar.cc/100?img=16",
+        ultimaVisita: 2
+      }
+    ];
+
+    // ==========================
+    // RENDER APPOINTMENTS
+    // ==========================
+
+    function renderAppointments(data) {
+
+      const container = document.getElementById("appointments");
+
+      container.innerHTML = "";
+
+      data.forEach(client => {
+
+        const isReactivation = client.ultimaVisita >= 30;
+
+        container.innerHTML += `
+
+          <div class="card-2 rounded-[28px] p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-5 hover:bg-white/[0.03] transition-all fade-up">
+
+            <div class="flex items-center gap-4">
+
+              <img
+                src="${client.avatar}"
+                class="w-16 h-16 rounded-2xl object-cover"
+              />
+
+              <div>
+
+                <div class="flex items-center gap-3">
+
+                  <h4 class="text-lg font-medium">
+                    ${client.nome}
+                  </h4>
+
+                  ${client.vip ? `
+                    <span class="px-3 py-1 rounded-full text-xs bg-amber-300/10 text-amber-300 border border-amber-300/10">
+                      VIP
+                    </span>
+                  ` : ""}
+
+                </div>
+
+                <div class="text-white/40 mt-1">
+                  ${client.servico}
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="flex items-center justify-between lg:justify-end gap-4 flex-wrap">
+
+              <div class="text-right">
+                <div class="text-white/40 text-sm">
+                  Horário
+                </div>
+
+                <div class="font-semibold text-lg">
+                  ${client.horario}
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+
+                <button
+                  onclick="openModal('${client.nome}', '${client.telefone}', 'lembrete')"
+                  class="w-11 h-11 rounded-2xl bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center"
+                  title="Lembrar horário"
+                >
+                  <i data-lucide="message-circle-more" class="w-4 h-4"></i>
+                </button>
+
+                <button
+                  onclick="openModal('${client.nome}', '${client.telefone}', 'aniversario')"
+                  class="w-11 h-11 rounded-2xl bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center"
+                  title="Mensagem de aniversário"
+                >
+                  <i data-lucide="gift" class="w-4 h-4"></i>
+                </button>
+
+                ${
+                  isReactivation
+                  ?
+                  `
+                  <button
+                    onclick="openModal('${client.nome}', '${client.telefone}', 'reativacao')"
+                    class="w-11 h-11 rounded-2xl bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20 transition-all flex items-center justify-center"
+                    title="Reativar cliente"
+                  >
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                  </button>
+                  `
+                  :
+                  ""
+                }
+
+              </div>
+
+            </div>
+
+          </div>
+
+        `;
+
+      });
+
+      lucide.createIcons();
+    }
+
+    // ==========================
+    // FIREBASE REALTIME LISTENER
+    // ==========================
+
+    agendamentosRef.onSnapshot((snapshot) => {
+
+      if (snapshot.empty) {
+
+        renderAppointments(mockAppointments);
+
+      } else {
+
+        const appointments = [];
+
+        snapshot.forEach(doc => {
+          appointments.push(doc.data());
+        });
+
+        renderAppointments(appointments);
+      }
+
+    });
+
+    // ==========================
+    // MODAL CRM
+    // ==========================
+
+    let whatsappLink = "";
+
+    function openModal(nome, telefone, tipo) {
+
+      const modal = document.getElementById("modal");
+      const modalMessage = document.getElementById("modalMessage");
+
+      let message = "";
+
+      if(tipo === "lembrete") {
+
+        message = `Olá ${nome}, passando para lembrar do seu horário hoje ✂️ Estamos te esperando na BarberOS.`;
+
+      }
+
+      if(tipo === "aniversario") {
+
+        message = `Feliz aniversário, ${nome}! 🎉 A equipe BarberOS deseja um novo ciclo cheio de conquistas. Seu visual premium te espera.`;
+
+      }
+
+      if(tipo === "reativacao") {
+
+        message = `${nome}, sentimos sua falta por aqui 👊 Temos um horário especial reservado para você voltar com tudo. Bora renovar o visual?`;
+
+      }
+
+      whatsappLink = `https://wa.me/${telefone}?text=${encodeURIComponent(message)}`;
+
+      modalMessage.innerText = message;
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+
+    }
+
+    function closeModal() {
+
+      const modal = document.getElementById("modal");
+
+      modal.classList.remove("flex");
+      modal.classList.add("hidden");
+
+    }
+
+    function sendWhatsApp() {
+      window.open(whatsappLink, "_blank");
+    }
+
+  </script>
 
 </body>
 </html>
