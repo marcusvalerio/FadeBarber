@@ -3,688 +3,664 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BarberOS — CRM Premium para Barbearias</title>
 
-  <!-- Inter Font -->
+  <title>BarberOS</title>
+
+  <!-- FONT -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind -->
+  <!-- TAILWIND -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide Icons -->
+  <!-- ICONS -->
   <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <style>
     * {
       font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       background: #0A0A0A;
       color: white;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
-    .glass {
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+    .screen {
+      display: none;
+      animation: fade .25s ease;
     }
 
-    .card {
-      background: #141414;
-      border: 1px solid rgba(255,255,255,0.05);
+    .screen.active {
+      display: block;
     }
 
-    .card-2 {
-      background: #1A1A1A;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .gradient-glow {
-      background: radial-gradient(circle at top right, rgba(52,211,153,0.12), transparent 40%);
-    }
-
-    .metric-glow {
-      box-shadow: 0 0 40px rgba(52,211,153,0.08);
-    }
-
-    .sidebar-item.active {
-      background: rgba(255,255,255,0.06);
-    }
-
-    .fade-up {
-      animation: fadeUp .4s ease;
-    }
-
-    @keyframes fadeUp {
+    @keyframes fade {
       from {
         opacity: 0;
         transform: translateY(8px);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0px);
       }
     }
 
-    ::-webkit-scrollbar {
-      width: 6px;
+    .glass {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
     }
 
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,.08);
-      border-radius: 999px;
+    .card {
+      background: #141414;
+      box-shadow: 0 10px 40px rgba(0,0,0,.25);
+    }
+
+    .bottom-sheet {
+      transform: translateY(100%);
+      transition: .35s ease;
+    }
+
+    .bottom-sheet.open {
+      transform: translateY(0%);
+    }
+
+    .overlay {
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    input,
+    select {
+      outline: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 0px;
     }
   </style>
 </head>
 
-<body class="min-h-screen">
+<body class="h-screen flex flex-col">
 
-  <div class="flex h-screen overflow-hidden">
+  <!-- APP -->
+  <div class="flex-1 overflow-hidden">
 
-    <!-- SIDEBAR -->
-    <aside class="hidden md:flex flex-col w-24 border-r border-white/5 bg-black/30 backdrop-blur-xl items-center py-8 justify-between">
-
-      <div class="space-y-8 w-full flex flex-col items-center">
-
-        <div class="w-14 h-14 rounded-2xl bg-white text-black flex items-center justify-center font-bold text-xl">
-          B
-        </div>
-
-        <nav class="flex flex-col gap-4 mt-10">
-
-          <button class="sidebar-item active transition-all w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-white/10">
-            <i data-lucide="layout-dashboard"></i>
-          </button>
-
-          <button class="sidebar-item transition-all w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-white/10">
-            <i data-lucide="calendar-days"></i>
-          </button>
-
-          <button class="sidebar-item transition-all w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-white/10">
-            <i data-lucide="users"></i>
-          </button>
-
-          <button class="sidebar-item transition-all w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-white/10">
-            <i data-lucide="wallet"></i>
-          </button>
-
-        </nav>
-
-      </div>
-
-      <div class="w-14 h-14 rounded-2xl bg-[#1A1A1A] flex items-center justify-center border border-white/5">
-        <i data-lucide="settings-2"></i>
-      </div>
-
-    </aside>
-
-    <!-- MAIN -->
-    <main class="flex-1 overflow-y-auto gradient-glow">
+    <!-- DASHBOARD -->
+    <section id="dashboardScreen" class="screen active h-full overflow-y-auto px-5 pt-8 pb-32">
 
       <!-- HEADER -->
-      <header class="px-6 md:px-12 pt-10 pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div class="mb-8">
 
-        <div>
-          <p class="text-white/40 text-sm mb-2">
-            BarberOS Dashboard
-          </p>
+        <p class="text-white/40 text-sm">
+          BarberOS
+        </p>
 
-          <h1 class="text-4xl font-semibold tracking-tight">
-            Sua barbearia, em tempo real.
-          </h1>
-        </div>
+        <h1 class="text-4xl font-semibold tracking-tight mt-2">
+          Sua barbearia.
+          <br/>
+          Em movimento.
+        </h1>
 
-        <div class="flex items-center gap-4">
+      </div>
 
-          <button class="card px-5 py-3 rounded-2xl hover:bg-white/5 transition-all flex items-center gap-2">
-            <i data-lucide="bell" class="w-4 h-4"></i>
-            Notificações
-          </button>
+      <!-- METRICS -->
+      <div class="space-y-4">
 
-          <div class="w-12 h-12 rounded-2xl overflow-hidden border border-white/10">
-            <img
-              src="https://i.pravatar.cc/100?img=12"
-              class="w-full h-full object-cover"
-            />
-          </div>
+        <!-- FATURAMENTO -->
+        <div class="card rounded-[32px] p-6">
 
-        </div>
+          <div class="flex items-start justify-between">
 
-      </header>
+            <div>
 
-      <!-- CONTENT -->
-      <section class="px-6 md:px-12 pb-28">
+              <p class="text-white/40 text-sm">
+                Faturamento Total
+              </p>
 
-        <!-- METRICS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-          <div class="card metric-glow rounded-[28px] p-6 fade-up">
-
-            <div class="flex items-center justify-between">
-
-              <div>
-                <p class="text-white/40 text-sm">
-                  Faturamento do Mês
-                </p>
-
-                <h2 class="text-3xl font-semibold mt-3">
-                  R$ 18.420
-                </h2>
-              </div>
-
-              <div class="w-14 h-14 rounded-2xl bg-emerald-400/10 flex items-center justify-center text-emerald-400">
-                <i data-lucide="trending-up"></i>
-              </div>
+              <h2
+                id="totalRevenue"
+                class="text-4xl font-semibold mt-4"
+              >
+                R$ 0
+              </h2>
 
             </div>
 
-            <div class="mt-6 text-emerald-400 text-sm">
-              +12.4% vs mês anterior
-            </div>
-
-          </div>
-
-          <div class="card rounded-[28px] p-6 fade-up">
-
-            <div class="flex items-center justify-between">
-
-              <div>
-                <p class="text-white/40 text-sm">
-                  Cortes Realizados
-                </p>
-
-                <h2 class="text-3xl font-semibold mt-3">
-                  286
-                </h2>
-              </div>
-
-              <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
-                <i data-lucide="scissors"></i>
-              </div>
-
-            </div>
-
-            <div class="mt-6 text-white/50 text-sm">
-              Média de 9.2 por dia
-            </div>
-
-          </div>
-
-          <div class="card rounded-[28px] p-6 fade-up">
-
-            <div class="flex items-center justify-between">
-
-              <div>
-                <p class="text-white/40 text-sm">
-                  Retenção
-                </p>
-
-                <h2 class="text-3xl font-semibold mt-3">
-                  87%
-                </h2>
-              </div>
-
-              <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
-                <i data-lucide="heart-handshake"></i>
-              </div>
-
-            </div>
-
-            <div class="mt-6 text-emerald-400 text-sm">
-              Excelente fidelização
+            <div class="w-14 h-14 rounded-2xl bg-emerald-400/10 flex items-center justify-center">
+              <i data-lucide="trending-up" class="text-emerald-400"></i>
             </div>
 
           </div>
 
         </div>
 
-        <!-- AGENDA -->
-        <div class="mt-10 grid grid-cols-1 xl:grid-cols-[1.4fr_0.6fr] gap-6">
+        <!-- CORTES -->
+        <div class="card rounded-[32px] p-6 flex items-center justify-between">
 
-          <!-- LIST -->
-          <div class="card rounded-[32px] p-7">
+          <div>
 
-            <div class="flex items-center justify-between mb-8">
+            <p class="text-white/40 text-sm">
+              Cortes Realizados
+            </p>
 
-              <div>
-                <h3 class="text-2xl font-semibold">
-                  Agenda do Dia
-                </h3>
-
-                <p class="text-white/40 mt-1">
-                  Atualização em tempo real via Firebase
-                </p>
-              </div>
-
-              <div class="flex items-center gap-2 text-emerald-400 text-sm">
-                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                Live
-              </div>
-
-            </div>
-
-            <div
-              id="appointments"
-              class="space-y-4"
-            ></div>
+            <h2
+              id="totalCuts"
+              class="text-3xl font-semibold mt-3"
+            >
+              0
+            </h2>
 
           </div>
 
-          <!-- SIDE INSIGHTS -->
-          <div class="space-y-6">
-
-            <div class="card rounded-[32px] p-6">
-
-              <div class="flex items-center justify-between mb-5">
-
-                <div>
-                  <h3 class="text-xl font-semibold">
-                    Clientes VIP
-                  </h3>
-
-                  <p class="text-white/40 text-sm mt-1">
-                    Mais recorrentes
-                  </p>
-                </div>
-
-                <i data-lucide="crown" class="text-amber-300"></i>
-
-              </div>
-
-              <div class="space-y-4">
-
-                <div class="flex items-center gap-3">
-                  <img src="https://i.pravatar.cc/100?img=14" class="w-12 h-12 rounded-2xl"/>
-                  <div>
-                    <p class="font-medium">Lucas Andrade</p>
-                    <p class="text-white/40 text-sm">12 visitas</p>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <img src="https://i.pravatar.cc/100?img=32" class="w-12 h-12 rounded-2xl"/>
-                  <div>
-                    <p class="font-medium">Pedro Moraes</p>
-                    <p class="text-white/40 text-sm">9 visitas</p>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
-            <div class="card rounded-[32px] p-6">
-
-              <div class="flex items-center justify-between">
-
-                <div>
-                  <h3 class="text-xl font-semibold">
-                    CRM Inteligente
-                  </h3>
-
-                  <p class="text-white/40 text-sm mt-1">
-                    Automação emocional
-                  </p>
-                </div>
-
-                <i data-lucide="sparkles"></i>
-
-              </div>
-
-              <div class="mt-6 space-y-4 text-sm">
-
-                <div class="bg-white/[0.03] rounded-2xl p-4 border border-white/5">
-                  3 clientes fazem aniversário esta semana.
-                </div>
-
-                <div class="bg-white/[0.03] rounded-2xl p-4 border border-white/5">
-                  6 clientes estão há +30 dias sem retornar.
-                </div>
-
-                <div class="bg-emerald-400/10 rounded-2xl p-4 border border-emerald-400/10 text-emerald-300">
-                  Potencial de reativação: +R$ 2.400
-                </div>
-
-              </div>
-
-            </div>
-
+          <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
+            <i data-lucide="scissors"></i>
           </div>
 
         </div>
 
-      </section>
+      </div>
 
-    </main>
+      <!-- CLIENTES -->
+      <div class="mt-10">
 
-  </div>
+        <div class="flex items-center justify-between mb-5">
 
-  <!-- MOBILE NAV -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/5 px-6 py-4 flex items-center justify-between z-50">
+          <div>
+            <h3 class="text-2xl font-semibold">
+              Próximos Clientes
+            </h3>
 
-    <button class="text-white">
-      <i data-lucide="layout-dashboard"></i>
-    </button>
+            <p class="text-white/40 text-sm mt-1">
+              Agenda em tempo real
+            </p>
+          </div>
 
-    <button class="text-white/40">
-      <i data-lucide="calendar-days"></i>
-    </button>
-
-    <button class="text-white/40">
-      <i data-lucide="users"></i>
-    </button>
-
-    <button class="text-white/40">
-      <i data-lucide="wallet"></i>
-    </button>
-
-  </nav>
-
-  <!-- MODAL -->
-  <div
-    id="modal"
-    class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-6"
-  >
-
-    <div class="card rounded-[32px] w-full max-w-lg p-8">
-
-      <div class="flex items-center justify-between mb-6">
-
-        <div>
-          <h2 class="text-2xl font-semibold">
-            Automação CRM
-          </h2>
-
-          <p class="text-white/40 mt-1">
-            Mensagem premium pronta
-          </p>
         </div>
 
-        <button onclick="closeModal()">
-          <i data-lucide="x"></i>
-        </button>
+        <div
+          id="upcomingList"
+          class="space-y-4"
+        ></div>
+
+      </div>
+
+    </section>
+
+    <!-- AGENDA -->
+    <section id="agendaScreen" class="screen h-full overflow-y-auto px-5 pt-8 pb-32">
+
+      <div class="mb-8">
+
+        <p class="text-white/40 text-sm">
+          Agenda
+        </p>
+
+        <h1 class="text-4xl font-semibold tracking-tight mt-2">
+          Todos os horários
+        </h1>
 
       </div>
 
       <div
-        id="modalMessage"
-        class="bg-white/[0.03] border border-white/5 rounded-2xl p-5 text-white/80 leading-relaxed"
+        id="agendaList"
+        class="space-y-4"
       ></div>
 
-      <div class="mt-6 flex gap-3">
+    </section>
 
-        <button
-          onclick="sendWhatsApp()"
-          class="flex-1 bg-white text-black rounded-2xl py-4 font-medium hover:scale-[1.01] transition-all"
-        >
-          Abrir WhatsApp
-        </button>
+  </div>
 
-        <button
-          onclick="closeModal()"
-          class="px-6 rounded-2xl border border-white/10 hover:bg-white/5 transition-all"
-        >
-          Fechar
-        </button>
+  <!-- BOTTOM NAV -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-black/70 backdrop-blur-2xl border-t border-white/5 px-6 py-5 flex items-center justify-between z-50">
 
+    <!-- DASHBOARD -->
+    <button
+      onclick="switchScreen('dashboard')"
+      class="flex flex-col items-center gap-1 text-white"
+    >
+      <i data-lucide="layout-dashboard"></i>
+      <span class="text-xs">Dashboard</span>
+    </button>
+
+    <!-- ADD -->
+    <button
+      onclick="openModal()"
+      class="w-20 h-20 rounded-full bg-white text-black flex items-center justify-center -mt-10 shadow-2xl"
+    >
+      <i data-lucide="plus" class="w-8 h-8"></i>
+    </button>
+
+    <!-- AGENDA -->
+    <button
+      onclick="switchScreen('agenda')"
+      class="flex flex-col items-center gap-1 text-white"
+    >
+      <i data-lucide="calendar-days"></i>
+      <span class="text-xs">Agenda</span>
+    </button>
+
+  </nav>
+
+  <!-- OVERLAY -->
+  <div
+    id="overlay"
+    class="overlay fixed inset-0 bg-black/70 backdrop-blur-sm z-[90]"
+    onclick="closeModal()"
+  ></div>
+
+  <!-- MODAL -->
+  <div
+    id="bottomSheet"
+    class="bottom-sheet fixed bottom-0 left-0 right-0 z-[100] bg-[#111111] rounded-t-[40px] p-6 pb-10 border-t border-white/5"
+  >
+
+    <div class="w-16 h-1.5 rounded-full bg-white/10 mx-auto mb-8"></div>
+
+    <div class="flex items-center justify-between mb-8">
+
+      <div>
+        <p class="text-white/40 text-sm">
+          Novo Agendamento
+        </p>
+
+        <h2 class="text-3xl font-semibold mt-1">
+          Adicionar cliente
+        </h2>
       </div>
+
+      <button onclick="closeModal()">
+        <i data-lucide="x"></i>
+      </button>
+
+    </div>
+
+    <!-- FORM -->
+    <div class="space-y-4">
+
+      <!-- CLIENTE -->
+      <input
+        id="clienteInput"
+        type="text"
+        placeholder="Nome do Cliente"
+        class="w-full h-16 rounded-3xl bg-[#1A1A1A] px-5 text-white placeholder:text-white/30"
+      />
+
+      <!-- SERVIÇO -->
+      <select
+        id="servicoInput"
+        class="w-full h-16 rounded-3xl bg-[#1A1A1A] px-5 text-white"
+      >
+        <option value="">Selecione o serviço</option>
+        <option>Corte</option>
+        <option>Barba</option>
+        <option>Corte + Barba</option>
+        <option>Sobrancelha</option>
+      </select>
+
+      <!-- VALOR -->
+      <input
+        id="valorInput"
+        type="number"
+        placeholder="Valor (R$)"
+        class="w-full h-16 rounded-3xl bg-[#1A1A1A] px-5 text-white placeholder:text-white/30"
+      />
+
+      <!-- DATA -->
+      <input
+        id="dataInput"
+        type="datetime-local"
+        class="w-full h-16 rounded-3xl bg-[#1A1A1A] px-5 text-white"
+      />
+
+      <!-- BTN -->
+      <button
+        onclick="saveAppointment()"
+        class="w-full h-16 rounded-3xl bg-white text-black font-semibold text-lg mt-4"
+      >
+        Salvar Agendamento
+      </button>
 
     </div>
 
   </div>
 
+  <!-- JS -->
   <script>
 
     lucide.createIcons();
 
-    // ==========================
-    // FIREBASE CONFIG
-    // ==========================
+    // =========================
+    // DATABASE
+    // =========================
 
-    const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SEU_PROJETO.firebaseapp.com",
-      projectId: "SEU_PROJECT_ID",
-      storageBucket: "SEU_PROJETO.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "APP_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-
-    const db = firebase.firestore();
-
-    // ==========================
-    // COLLECTIONS
-    // ==========================
-
-    const clientesRef = db.collection("clientes");
-    const agendamentosRef = db.collection("agendamentos");
-
-    // ==========================
-    // MOCK DATA (fallback)
-    // ==========================
-
-    const mockAppointments = [
-      {
-        nome: "Lucas Andrade",
-        horario: "09:00",
-        servico: "Corte + Barba",
-        telefone: "5521999999999",
-        vip: true,
-        avatar: "https://i.pravatar.cc/100?img=12",
-        ultimaVisita: 5
-      },
-      {
-        nome: "Pedro Moraes",
-        horario: "10:30",
-        servico: "Mid Fade",
-        telefone: "5521988888888",
-        vip: false,
-        avatar: "https://i.pravatar.cc/100?img=32",
-        ultimaVisita: 40
-      },
-      {
-        nome: "Rafael Costa",
-        horario: "13:00",
-        servico: "Corte Social",
-        telefone: "5521977777777",
-        vip: true,
-        avatar: "https://i.pravatar.cc/100?img=16",
-        ultimaVisita: 2
-      }
-    ];
-
-    // ==========================
-    // RENDER APPOINTMENTS
-    // ==========================
-
-    function renderAppointments(data) {
-
-      const container = document.getElementById("appointments");
-
-      container.innerHTML = "";
-
-      data.forEach(client => {
-
-        const isReactivation = client.ultimaVisita >= 30;
-
-        container.innerHTML += `
-
-          <div class="card-2 rounded-[28px] p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-5 hover:bg-white/[0.03] transition-all fade-up">
-
-            <div class="flex items-center gap-4">
-
-              <img
-                src="${client.avatar}"
-                class="w-16 h-16 rounded-2xl object-cover"
-              />
-
-              <div>
-
-                <div class="flex items-center gap-3">
-
-                  <h4 class="text-lg font-medium">
-                    ${client.nome}
-                  </h4>
-
-                  ${client.vip ? `
-                    <span class="px-3 py-1 rounded-full text-xs bg-amber-300/10 text-amber-300 border border-amber-300/10">
-                      VIP
-                    </span>
-                  ` : ""}
-
-                </div>
-
-                <div class="text-white/40 mt-1">
-                  ${client.servico}
-                </div>
-
-              </div>
-
-            </div>
-
-            <div class="flex items-center justify-between lg:justify-end gap-4 flex-wrap">
-
-              <div class="text-right">
-                <div class="text-white/40 text-sm">
-                  Horário
-                </div>
-
-                <div class="font-semibold text-lg">
-                  ${client.horario}
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2">
-
-                <button
-                  onclick="openModal('${client.nome}', '${client.telefone}', 'lembrete')"
-                  class="w-11 h-11 rounded-2xl bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center"
-                  title="Lembrar horário"
-                >
-                  <i data-lucide="message-circle-more" class="w-4 h-4"></i>
-                </button>
-
-                <button
-                  onclick="openModal('${client.nome}', '${client.telefone}', 'aniversario')"
-                  class="w-11 h-11 rounded-2xl bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center"
-                  title="Mensagem de aniversário"
-                >
-                  <i data-lucide="gift" class="w-4 h-4"></i>
-                </button>
-
-                ${
-                  isReactivation
-                  ?
-                  `
-                  <button
-                    onclick="openModal('${client.nome}', '${client.telefone}', 'reativacao')"
-                    class="w-11 h-11 rounded-2xl bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20 transition-all flex items-center justify-center"
-                    title="Reativar cliente"
-                  >
-                    <i data-lucide="zap" class="w-4 h-4"></i>
-                  </button>
-                  `
-                  :
-                  ""
-                }
-
-              </div>
-
-            </div>
-
-          </div>
-
-        `;
-
-      });
-
-      lucide.createIcons();
+    function getAppointments() {
+      return JSON.parse(localStorage.getItem("agendamentos")) || [];
     }
 
-    // ==========================
-    // FIREBASE REALTIME LISTENER
-    // ==========================
+    function saveAppointments(data) {
+      localStorage.setItem("agendamentos", JSON.stringify(data));
+    }
 
-    agendamentosRef.onSnapshot((snapshot) => {
+    // =========================
+    // SCREENS
+    // =========================
 
-      if (snapshot.empty) {
+    function switchScreen(screen) {
 
-        renderAppointments(mockAppointments);
+      document
+        .querySelectorAll(".screen")
+        .forEach(s => s.classList.remove("active"));
 
-      } else {
-
-        const appointments = [];
-
-        snapshot.forEach(doc => {
-          appointments.push(doc.data());
-        });
-
-        renderAppointments(appointments);
+      if(screen === "dashboard") {
+        document
+          .getElementById("dashboardScreen")
+          .classList.add("active");
       }
 
-    });
-
-    // ==========================
-    // MODAL CRM
-    // ==========================
-
-    let whatsappLink = "";
-
-    function openModal(nome, telefone, tipo) {
-
-      const modal = document.getElementById("modal");
-      const modalMessage = document.getElementById("modalMessage");
-
-      let message = "";
-
-      if(tipo === "lembrete") {
-
-        message = `Olá ${nome}, passando para lembrar do seu horário hoje ✂️ Estamos te esperando na BarberOS.`;
-
+      if(screen === "agenda") {
+        document
+          .getElementById("agendaScreen")
+          .classList.add("active");
       }
 
-      if(tipo === "aniversario") {
+    }
 
-        message = `Feliz aniversário, ${nome}! 🎉 A equipe BarberOS deseja um novo ciclo cheio de conquistas. Seu visual premium te espera.`;
+    // =========================
+    // MODAL
+    // =========================
 
-      }
+    function openModal() {
+      document
+        .getElementById("overlay")
+        .classList.add("active");
 
-      if(tipo === "reativacao") {
-
-        message = `${nome}, sentimos sua falta por aqui 👊 Temos um horário especial reservado para você voltar com tudo. Bora renovar o visual?`;
-
-      }
-
-      whatsappLink = `https://wa.me/${telefone}?text=${encodeURIComponent(message)}`;
-
-      modalMessage.innerText = message;
-
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-
+      document
+        .getElementById("bottomSheet")
+        .classList.add("open");
     }
 
     function closeModal() {
+      document
+        .getElementById("overlay")
+        .classList.remove("active");
 
-      const modal = document.getElementById("modal");
+      document
+        .getElementById("bottomSheet")
+        .classList.remove("open");
+    }
 
-      modal.classList.remove("flex");
-      modal.classList.add("hidden");
+    // =========================
+    // SAVE APPOINTMENT
+    // =========================
+
+    function saveAppointment() {
+
+      const nome = document
+        .getElementById("clienteInput")
+        .value
+        .trim();
+
+      const servico = document
+        .getElementById("servicoInput")
+        .value;
+
+      const valor = document
+        .getElementById("valorInput")
+        .value;
+
+      const data = document
+        .getElementById("dataInput")
+        .value;
+
+      if(!nome || !servico || !valor || !data) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+
+      const appointments = getAppointments();
+
+      appointments.push({
+        id: Date.now(),
+        nome,
+        servico,
+        valor: Number(valor),
+        data
+      });
+
+      saveAppointments(appointments);
+
+      clearForm();
+
+      closeModal();
+
+      renderUI();
 
     }
 
-    function sendWhatsApp() {
-      window.open(whatsappLink, "_blank");
+    // =========================
+    // CLEAR FORM
+    // =========================
+
+    function clearForm() {
+
+      document.getElementById("clienteInput").value = "";
+      document.getElementById("servicoInput").value = "";
+      document.getElementById("valorInput").value = "";
+      document.getElementById("dataInput").value = "";
+
     }
+
+    // =========================
+    // DELETE APPOINTMENT
+    // =========================
+
+    function deleteAppointment(id) {
+
+      const appointments = getAppointments();
+
+      const updated = appointments.filter(
+        item => item.id !== id
+      );
+
+      saveAppointments(updated);
+
+      renderUI();
+
+    }
+
+    // =========================
+    // FORMAT DATE
+    // =========================
+
+    function formatDate(dateString) {
+
+      const date = new Date(dateString);
+
+      return date.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+    }
+
+    // =========================
+    // RENDER UI
+    // =========================
+
+    function renderUI() {
+
+      const appointments = getAppointments();
+
+      // ORDER
+      appointments.sort((a,b) =>
+        new Date(a.data) - new Date(b.data)
+      );
+
+      // METRICS
+      const totalRevenue = appointments.reduce(
+        (acc, item) => acc + item.valor,
+        0
+      );
+
+      document.getElementById(
+        "totalRevenue"
+      ).innerText =
+        totalRevenue.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+
+      document.getElementById(
+        "totalCuts"
+      ).innerText = appointments.length;
+
+      // DASHBOARD LIST
+      const upcomingList =
+        document.getElementById("upcomingList");
+
+      upcomingList.innerHTML = "";
+
+      if(appointments.length === 0) {
+
+        upcomingList.innerHTML = `
+          <div class="card rounded-[32px] p-6 text-center text-white/40">
+            Nenhum horário cadastrado.
+          </div>
+        `;
+
+      } else {
+
+        appointments.slice(0,5).forEach(item => {
+
+          upcomingList.innerHTML += `
+
+            <div class="card rounded-[32px] p-5 flex items-center justify-between">
+
+              <div class="flex items-center gap-4">
+
+                <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
+                  <i data-lucide="scissors"></i>
+                </div>
+
+                <div>
+
+                  <h3 class="font-semibold text-lg">
+                    ${item.nome}
+                  </h3>
+
+                  <p class="text-white/40 text-sm mt-1">
+                    ${item.servico}
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="text-right">
+
+                <p class="font-semibold">
+                  ${formatDate(item.data)}
+                </p>
+
+                <p class="text-emerald-400 text-sm mt-1">
+                  R$ ${item.valor}
+                </p>
+
+              </div>
+
+            </div>
+
+          `;
+
+        });
+
+      }
+
+      // AGENDA LIST
+      const agendaList =
+        document.getElementById("agendaList");
+
+      agendaList.innerHTML = "";
+
+      if(appointments.length === 0) {
+
+        agendaList.innerHTML = `
+          <div class="card rounded-[32px] p-6 text-center text-white/40">
+            Nenhum horário encontrado.
+          </div>
+        `;
+
+      } else {
+
+        appointments.forEach(item => {
+
+          agendaList.innerHTML += `
+
+            <div class="card rounded-[32px] p-5">
+
+              <div class="flex items-start justify-between gap-4">
+
+                <div>
+
+                  <div class="flex items-center gap-3">
+
+                    <h3 class="text-xl font-semibold">
+                      ${item.nome}
+                    </h3>
+
+                    <span class="text-xs px-3 py-1 rounded-full bg-white/5">
+                      ${item.servico}
+                    </span>
+
+                  </div>
+
+                  <p class="text-white/40 mt-3">
+                    ${formatDate(item.data)}
+                  </p>
+
+                  <p class="text-emerald-400 mt-2 font-medium">
+                    R$ ${item.valor}
+                  </p>
+
+                </div>
+
+                <button
+                  onclick="deleteAppointment(${item.id})"
+                  class="w-12 h-12 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center"
+                >
+                  <i data-lucide="trash-2" class="w-5 h-5"></i>
+                </button>
+
+              </div>
+
+            </div>
+
+          `;
+
+        });
+
+      }
+
+      lucide.createIcons();
+
+    }
+
+    // =========================
+    // INIT
+    // =========================
+
+    renderUI();
 
   </script>
 
