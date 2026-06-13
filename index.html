@@ -1,668 +1,844 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-  <title>BarberOS</title>
-
-  <!-- FONT -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- TAILWIND -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- ICONS -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <style>
-    * {
-      font-family: 'Inter', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background: #0A0A0A;
-      color: white;
-      overflow: hidden;
-    }
-
-    .screen {
-      display: none;
-      animation: fade .25s ease;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    @keyframes fade {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0px);
-      }
-    }
-
-    .glass {
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(20px);
-    }
-
-    .card {
-      background: #141414;
-      box-shadow: 0 10px 40px rgba(0,0,0,.25);
-    }
-
-    .bottom-sheet {
-      transform: translateY(100%);
-      transition: .35s ease;
-    }
-
-    .bottom-sheet.open {
-      transform: translateY(0%);
-    }
-
-    .overlay {
-      opacity: 0;
-      pointer-events: none;
-      transition: .25s ease;
-    }
-
-    .overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    input,
-    select {
-      outline: none;
-    }
-
-    ::-webkit-scrollbar {
-      width: 0px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Painel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cloud:#F2F2ED;--limone:#FADE79;--vermilion:#E56024;
+  --windsor:#9FC9E4;--night:#1C2E63;--cove:#051040;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;--r-xl:28px;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --spring:cubic-bezier(0.34,1.56,0.64,1);
+}
+[data-theme="dark"] {
+  --bg:#06101c;--bg2:#090f1a;
+  --surf:rgba(28,46,99,0.28);--surf2:rgba(28,46,99,0.48);
+  --border:rgba(159,201,228,0.10);--border2:rgba(159,201,228,0.22);
+  --text:#F2F2ED;--text2:rgba(242,242,237,0.55);--text3:rgba(242,242,237,0.30);
+  --accent:#FADE79;--accent2:#E56024;
+  --glass:rgba(6,16,28,0.75);--nav-bg:rgba(9,15,26,0.88);
+  --ok:#4cce90;--warn:#FADE79;--bad:#E56024;
+}
+[data-theme="light"] {
+  --bg:#F2F2ED;--bg2:#e8e8e2;
+  --surf:rgba(255,255,255,0.70);--surf2:rgba(255,255,255,0.92);
+  --border:rgba(28,46,99,0.09);--border2:rgba(28,46,99,0.20);
+  --text:#051040;--text2:rgba(5,16,64,0.50);--text3:rgba(5,16,64,0.28);
+  --accent:#1C2E63;--accent2:#E56024;
+  --glass:rgba(242,242,237,0.82);--nav-bg:rgba(235,235,230,0.90);
+  --ok:#2a7a50;--warn:#8a6d00;--bad:#c44e18;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;font-size:14px;background:var(--bg);color:var(--text);
+  min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing:antialiased;transition:background .3s,color .3s;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;}
+#prog{position:fixed;top:0;left:0;height:2px;z-index:1000;background:var(--accent);border-radius:0 2px 2px 0;width:0%;transition:width .5s var(--ease)}
+header{position:sticky;top:0;z-index:100;height:54px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;background:var(--glass);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);
+  border-bottom:1px solid var(--border);}
+.wordmark{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:700;letter-spacing:-0.5px;
+  color:var(--text);line-height:1;display:flex;align-items:center;gap:4px;}
+.wordmark-dot{width:6px;height:6px;border-radius:50%;background:var(--vermilion);flex-shrink:0;}
+.theme-btn{width:36px;height:20px;border-radius:99px;border:none;cursor:pointer;
+  background:var(--surf2);border:1px solid var(--border2);position:relative;flex-shrink:0;transition:background .25s;}
+.theme-btn::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+  background:var(--text);transition:transform .25s var(--spring),background .25s;}
+[data-theme="light"] .theme-btn::after{transform:translateX(16px)}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:100;
+  padding:8px 16px calc(8px + env(safe-area-inset-bottom));
+  background:var(--nav-bg);backdrop-filter:blur(28px) saturate(2);-webkit-backdrop-filter:blur(28px) saturate(2);
+  border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;cursor:pointer;
+  padding:4px 0;transition:transform .2s var(--spring);-webkit-tap-highlight-color:transparent;
+  border:none;background:none;color:var(--text3);}
+.nav-item:active{transform:scale(0.88)}
+.nav-icon{width:44px;height:28px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;position:relative;}
+.nav-item.active .nav-icon{background:var(--surf2);}
+.nav-item svg{width:18px;height:18px;stroke:var(--text3);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;}
+.nav-item.active svg{stroke:var(--accent)}
+.nav-label{font-size:10px;font-weight:500;letter-spacing:0.2px;color:var(--text3);transition:color .2s;}
+.nav-item.active .nav-label{color:var(--accent)}
+.nav-item.active .nav-icon::before{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  width:18px;height:3px;border-radius:99px;background:var(--accent);}
+main{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:24px 16px 16px;}
+.page{display:none}
+.page.active{display:block;animation:fadeUp .38s var(--ease) both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.eyebrow{font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+h1,h2{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-0.5px;line-height:1.1;}
+h1{font-size:clamp(22px,5vw,28px);font-weight:700}
+h2{font-size:clamp(17px,4vw,20px);font-weight:600}
+h3{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:600;letter-spacing:-0.2px;}
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;transition:border-color .2s;}
+.card:hover{border-color:var(--border2)}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:99px;border:none;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;letter-spacing:-0.1px;
+  transition:all .2s var(--ease);-webkit-tap-highlight-color:transparent;}
+.btn:active{transform:scale(0.96)}
+.btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.btn-primary{background:var(--accent);color:var(--cove);}
+[data-theme="dark"] .btn-primary:hover{background:#fde98a}
+[data-theme="light"] .btn-primary{background:var(--night);color:var(--cloud);}
+[data-theme="light"] .btn-primary:hover{background:#253580}
+.btn-ghost{background:var(--surf2);color:var(--text2);border:1px solid var(--border2);}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2)}
+.btn-sm{padding:8px 16px;font-size:12px}
+.btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+.btn-arrow{transition:transform .2s var(--spring)}
+.btn:not(:disabled):hover .btn-arrow{transform:translateX(3px)}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:0.4px;text-transform:uppercase;}
+.field input,.field select,.field textarea{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:10px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;outline:none;
+  transition:border-color .2s,background .2s;appearance:none;-webkit-appearance:none;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--border2);background:var(--surf);}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field textarea{resize:vertical;min-height:80px;line-height:1.55}
+[data-theme="light"] .field input,[data-theme="light"] .field select,[data-theme="light"] .field textarea{background:rgba(255,255,255,.6);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:500;
+  border:1px solid var(--border2);background:var(--surf2);color:var(--text2);white-space:nowrap;}
+.chip.ok{background:rgba(76,206,144,.12);color:var(--ok);border-color:transparent}
+.chip.warn{background:rgba(250,222,121,.12);color:var(--warn);border-color:transparent}
+.chip.bad{background:rgba(229,96,36,.12);color:var(--bad);border-color:transparent}
+.section-head{margin-bottom:20px}
+.section-head p{color:var(--text2);font-size:13px;margin-top:4px;max-width:420px;line-height:1.5}
+.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.actions-between{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:20px}
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.toast{position:fixed;bottom:calc(80px + 12px + env(safe-area-inset-bottom));left:50%;
+  transform:translateX(-50%) translateY(10px);background:var(--text);color:var(--bg);
+  padding:9px 18px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;
+  transition:opacity .25s,transform .3s var(--spring);z-index:999;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+.overlay.open{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet{background:var(--bg);border:1px solid var(--border2);border-radius:var(--r-xl) var(--r-xl) 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:680px;
+  animation:slideUp .35s var(--ease) both;max-height:90vh;overflow-y:auto;}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.sheet-handle{width:40px;height:4px;border-radius:99px;background:var(--border2);margin:0 auto 16px;}
+.sheet-title{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:700;letter-spacing:-0.4px;margin-bottom:16px;}
+/* HOME */
+.home-greeting{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;}
+.home-greeting h1{font-size:clamp(20px,5vw,26px)}
+.home-date{font-size:11px;color:var(--text3);font-weight:400;text-align:right;line-height:1.5;white-space:nowrap;margin-top:4px;}
+.momentum-wrap{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:18px;margin-bottom:14px;overflow:hidden;position:relative;}
+.momentum-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.momentum-title{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:600;color:var(--text);}
+.momentum-score-num{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--accent);}
+.momentum-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:8px;position:relative;}
+.momentum-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--windsor),var(--limone));
+  width:0%;transition:width 1.1s var(--ease);position:relative;}
+.momentum-fill::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);
+  width:14px;height:14px;border-radius:50%;background:var(--limone);border:2px solid var(--bg);
+  box-shadow:0 0 10px rgba(250,222,121,.5);}
+.momentum-poles{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);letter-spacing:0.3px;font-weight:500;}
+.stat-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;
+  display:flex;flex-direction:column;gap:6px;transition:border-color .2s;}
+.stat-card:hover{border-color:var(--border2)}
+.stat-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:0.3px;text-transform:uppercase;}
+.stat-val{font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:700;letter-spacing:-1px;color:var(--text);line-height:1;}
+.stat-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+.pipeline-preview{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-top:14px;}
+.pipeline-preview-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.stage-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--border);}
+.stage-row:first-of-type{border-top:none;padding-top:0}
+.stage-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.stage-name{font-size:13px;color:var(--text2);flex:1}
+.stage-count{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
+.activity-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--border);}
+.activity-item:first-child{border-top:none;padding-top:0}
+.activity-line{width:3px;height:36px;border-radius:99px;flex-shrink:0;}
+.activity-line.ok{background:var(--ok)}.activity-line.warn{background:var(--warn)}.activity-line.bad{background:var(--bad)}.activity-line.neutral{background:var(--border2)}
+.activity-body{flex:1;min-width:0}
+.activity-title{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.activity-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+/* PIPELINE */
+.stage-section{margin-bottom:8px}
+.stage-header{display:flex;align-items:center;justify-content:space-between;padding:8px 4px;margin-bottom:6px;}
+.stage-header-left{display:flex;align-items:center;gap:8px}
+.stage-indicator{width:10px;height:10px;border-radius:50%}
+.stage-title{font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--text2);text-transform:uppercase;}
+.stage-count-badge{font-size:11px;color:var(--text3);background:var(--surf2);border:1px solid var(--border);border-radius:99px;padding:2px 8px;font-weight:500;}
+.client-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;
+  display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px;
+  transition:border-color .2s,transform .18s var(--spring),background .2s;-webkit-tap-highlight-color:transparent;}
+.client-card:hover{border-color:var(--border2);background:var(--surf2)}
+.client-card:active{transform:scale(0.98)}
+.client-avatar{width:36px;height:36px;border-radius:10px;background:var(--surf2);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;
+  font-size:13px;font-weight:700;color:var(--text2);flex-shrink:0;}
+.client-info{flex:1;min-width:0}
+.client-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.client-seg{font-size:12px;color:var(--text3);margin-top:2px;}
+.client-arrow{width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.empty{text-align:center;padding:28px 16px;color:var(--text3);font-size:13px;line-height:1.6;}
+.empty-icon{width:40px;height:40px;border-radius:12px;background:var(--surf2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+.empty-icon svg{width:18px;height:18px;stroke:var(--text3);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+/* ENTREGAS */
+.delivery-item{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;
+  display:flex;align-items:flex-start;gap:12px;transition:border-color .2s;margin-bottom:8px;}
+.delivery-item:hover{border-color:var(--border2)}
+.delivery-line{width:3px;min-height:44px;border-radius:99px;background:var(--border2);flex-shrink:0;margin-top:2px;}
+.delivery-body{flex:1;min-width:0}
+.delivery-title{font-size:14px;font-weight:500;color:var(--text);}
+.delivery-meta{font-size:11px;color:var(--text3);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;}
+.delivery-client{color:var(--text2)}
+.delivery-format{background:var(--surf2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:500;letter-spacing:0.3px;color:var(--text3);}
+/* BRIEFING */
+.briefing-item{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;
+  margin-bottom:8px;cursor:pointer;transition:border-color .2s,background .2s;}
+.briefing-item:hover{border-color:var(--border2);background:var(--surf2)}
+.briefing-item p{font-size:12px;color:var(--text3);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:4px;}
+/* DIAG */
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+@media(max-width:480px){.mod-grid{grid-template-columns:1fr}}
+.mod-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;
+  cursor:pointer;transition:border-color .2s,transform .2s var(--spring),background .2s;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;}
+.mod-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(250,222,121,.06),transparent 60%);opacity:0;transition:opacity .2s;}
+.mod-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.mod-card:hover::before{opacity:1}
+.mod-card:active{transform:scale(0.98)}
+.mod-card.selected{border-color:var(--accent);background:var(--surf2);}
+.mod-card.selected::before{opacity:1}
+.mod-icon{width:32px;height:32px;border-radius:9px;background:var(--surf2);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:12px;transition:background .2s;}
+.mod-icon svg{width:14px;height:14px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;}
+.mod-card.selected .mod-icon{background:var(--accent);border-color:var(--accent)}
+.mod-card.selected .mod-icon svg{stroke:var(--cove)}
+.mod-check{position:absolute;top:12px;right:12px;width:18px;height:18px;border-radius:50%;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.5);transition:opacity .2s,transform .25s var(--spring);}
+.mod-card.selected .mod-check{opacity:1;transform:scale(1)}
+.mod-check svg{width:9px;height:9px;stroke:var(--cove);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.form-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;margin-bottom:12px;}
+.form-card-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.form-card-icon{width:28px;height:28px;border-radius:8px;background:var(--surf2);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.form-card-icon svg{width:13px;height:13px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.form-card-head h3{font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text2);}
+.score-hero{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;
+  margin-bottom:14px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;position:relative;overflow:hidden;}
+.score-hero::after{content:'';position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(250,222,121,.07),transparent 70%);pointer-events:none;}
+[data-theme="light"] .score-hero::after{background:radial-gradient(circle,rgba(28,46,99,.05),transparent 70%)}
+.score-ring{position:relative;width:86px;height:86px;flex-shrink:0;}
+.score-ring svg{transform:rotate(-90deg)}
+.score-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;}
+.score-inner strong{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:700;letter-spacing:-1px;}
+.score-inner span{font-size:10px;color:var(--text3);margin-top:2px;}
+.score-copy h3{font-size:17px;margin-bottom:5px}
+.score-copy p{font-size:13px;color:var(--text2);max-width:320px;line-height:1.55}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+@media(max-width:480px){.dash-grid{grid-template-columns:1fr}}
+.dash-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;}
+.dash-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.dash-card-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text2);}
+.s-chip{font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;letter-spacing:0.2px;}
+.s-chip.ok{background:rgba(76,206,144,.14);color:var(--ok)}
+.s-chip.warn{background:rgba(250,222,121,.14);color:var(--warn)}
+.s-chip.bad{background:rgba(229,96,36,.14);color:var(--bad)}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bar-lbl{font-size:11px;color:var(--text3);width:90px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bar-track{flex:1;height:4px;background:var(--border);border-radius:99px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:99px;width:0%;transition:width .8s var(--ease);}
+.bar-fill.ok{background:var(--ok)}.bar-fill.warn{background:var(--warn)}.bar-fill.bad{background:var(--bad)}.bar-fill.def{background:var(--accent)}
+.bar-v{font-size:10px;color:var(--text3);width:22px;text-align:right;font-variant-numeric:tabular-nums;}
+.hl-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin-bottom:12px;}
+.hl-card-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:12px;font-weight:500;}
+.hl-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px solid var(--border);font-size:13px;color:var(--text2);line-height:1.5;}
+.hl-item:first-of-type{border-top:none;padding-top:0}
+.hl-bar{width:3px;min-height:32px;border-radius:99px;flex-shrink:0;margin-top:2px;}
+.hl-bar.ok{background:var(--ok)}.hl-bar.warn{background:var(--warn)}.hl-bar.bad{background:var(--bad)}
+.aval-section{margin-bottom:20px}
+.aval-head{font-family:'Bricolage Grotesque',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.8px;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.aval-head::after{content:'';flex:1;height:1px;background:var(--border);}
+.aval-q-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin-bottom:8px;transition:border-color .2s;}
+.aval-q-card:hover{border-color:var(--border2)}
+.aval-q{font-size:13px;font-weight:500;color:var(--text);margin-bottom:12px;line-height:1.5}
+.likert{display:flex;gap:7px;flex-wrap:wrap;}
+.likert-opt input{position:absolute;opacity:0;width:0;height:0;}
+.likert-opt label{width:34px;height:34px;border-radius:50%;border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--text3);
+  cursor:pointer;transition:all .15s;user-select:none;}
+.likert-opt label:hover{border-color:var(--accent);color:var(--accent)}
+.likert-opt input:checked+label{background:var(--accent);border-color:var(--accent);color:var(--cove);font-weight:700;transform:scale(1.08);}
+.likert-legend{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:5px;}
+.aval-obs{width:100%;margin-top:10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  padding:9px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;resize:vertical;min-height:64px;outline:none;transition:border-color .2s;}
+.aval-obs:focus{border-color:var(--border2)}
+.aval-obs::placeholder{color:var(--text3)}
+[data-theme="light"] .aval-obs{background:rgba(255,255,255,.6);}
+.ia-result{background:var(--surf);border:1px solid var(--border2);border-radius:var(--r-lg);padding:20px;margin-top:20px;position:relative;overflow:hidden;}
+.ia-result::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(250,222,121,.04),rgba(229,96,36,.03));pointer-events:none;}
+.ia-result h3{font-size:16px;margin-bottom:6px}
+.ia-result p{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:14px;}
+.ia-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);border:1px dashed var(--border2);border-radius:6px;padding:6px 12px;}
+.ia-dot{width:5px;height:5px;border-radius:50%;background:var(--warn);animation:pulse 1.8s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.client-strip{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);
+  padding:14px 16px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 160px;gap:12px;}
+@media(max-width:500px){.client-strip{grid-template-columns:1fr}}
+.hist-item{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;
+  margin-bottom:8px;cursor:pointer;transition:border-color .2s,background .2s;}
+.hist-item:hover{border-color:var(--border2);background:var(--surf2)}
+.hist-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.hist-meta{font-size:11px;color:var(--text3);}
+.hist-scores{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+</style>
 </head>
+<body>
+<div id="prog"></div>
+<header>
+  <div class="wordmark">Painel<div class="wordmark-dot"></div></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"></button>
+</header>
+<main>
 
-<body class="h-screen flex flex-col">
-
-  <!-- APP -->
-  <div class="flex-1 overflow-hidden">
-
-    <!-- DASHBOARD -->
-    <section id="dashboardScreen" class="screen active h-full overflow-y-auto px-5 pt-8 pb-32">
-
-      <!-- HEADER -->
-      <div class="mb-8">
-
-        <p class="text-white/40 text-sm">
-          BarberOS
-        </p>
-
-        <h1 class="text-4xl font-semibold tracking-tight mt-2">
-          Sua barbearia.
-          <br/>
-          Em movimento.
-        </h1>
-
-      </div>
-
-      <!-- METRICS -->
-      <div class="space-y-4">
-
-        <!-- FATURAMENTO -->
-        <div class="card rounded-[32px] p-6">
-
-          <div class="flex items-start justify-between">
-
-            <div>
-
-              <p class="text-white/40 text-sm">
-                Faturamento Total
-              </p>
-
-              <h2
-                id="totalRevenue"
-                class="text-4xl font-semibold mt-4"
-              >
-                R$ 0
-              </h2>
-
-            </div>
-
-            <div class="w-14 h-14 rounded-2xl bg-emerald-400/10 flex items-center justify-center">
-              <i data-lucide="trending-up" class="text-emerald-400"></i>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- CORTES -->
-        <div class="card rounded-[32px] p-6 flex items-center justify-between">
-
-          <div>
-
-            <p class="text-white/40 text-sm">
-              Cortes Realizados
-            </p>
-
-            <h2
-              id="totalCuts"
-              class="text-3xl font-semibold mt-3"
-            >
-              0
-            </h2>
-
-          </div>
-
-          <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
-            <i data-lucide="scissors"></i>
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- CLIENTES -->
-      <div class="mt-10">
-
-        <div class="flex items-center justify-between mb-5">
-
-          <div>
-            <h3 class="text-2xl font-semibold">
-              Próximos Clientes
-            </h3>
-
-            <p class="text-white/40 text-sm mt-1">
-              Agenda em tempo real
-            </p>
-          </div>
-
-        </div>
-
-        <div
-          id="upcomingList"
-          class="space-y-4"
-        ></div>
-
-      </div>
-
-    </section>
-
-    <!-- AGENDA -->
-    <section id="agendaScreen" class="screen h-full overflow-y-auto px-5 pt-8 pb-32">
-
-      <div class="mb-8">
-
-        <p class="text-white/40 text-sm">
-          Agenda
-        </p>
-
-        <h1 class="text-4xl font-semibold tracking-tight mt-2">
-          Todos os horários
-        </h1>
-
-      </div>
-
-      <div
-        id="agendaList"
-        class="space-y-4"
-      ></div>
-
-    </section>
-
+<!-- HOME -->
+<div class="page active" id="pg-home">
+  <div class="home-greeting">
+    <div><div class="eyebrow">Visão geral</div><h1 id="greeting-text">Bom dia.</h1></div>
+    <div class="home-date" id="home-date"></div>
   </div>
-
-  <!-- BOTTOM NAV -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-black/70 backdrop-blur-2xl border-t border-white/5 px-6 py-5 flex items-center justify-between z-50">
-
-    <!-- DASHBOARD -->
-    <button
-      onclick="switchScreen('dashboard')"
-      class="flex flex-col items-center gap-1 text-white"
-    >
-      <i data-lucide="layout-dashboard"></i>
-      <span class="text-xs">Dashboard</span>
-    </button>
-
-    <!-- ADD -->
-    <button
-      onclick="openModal()"
-      class="w-20 h-20 rounded-full bg-white text-black flex items-center justify-center -mt-10 shadow-2xl"
-    >
-      <i data-lucide="plus" class="w-8 h-8"></i>
-    </button>
-
-    <!-- AGENDA -->
-    <button
-      onclick="switchScreen('agenda')"
-      class="flex flex-col items-center gap-1 text-white"
-    >
-      <i data-lucide="calendar-days"></i>
-      <span class="text-xs">Agenda</span>
-    </button>
-
-  </nav>
-
-  <!-- OVERLAY -->
-  <div
-    id="overlay"
-    class="overlay fixed inset-0 bg-black/70 backdrop-blur-sm z-[90]"
-    onclick="closeModal()"
-  ></div>
-
-  <!-- MODAL -->
-  <div
-    id="bottomSheet"
-    class="bottom-sheet fixed bottom-0 left-0 right-0 z-[100] bg-[#111111] rounded-t-[40px] p-6 pb-10 border-t border-white/5"
-  >
-
-    <div class="w-16 h-1.5 rounded-full bg-white/10 mx-auto mb-8"></div>
-
-    <div class="flex items-center justify-between mb-8">
-
-      <div>
-        <p class="text-white/40 text-sm">
-          Novo Agendamento
-        </p>
-
-        <h2 class="text-3xl font-semibold mt-1">
-          Adicionar cliente
-        </h2>
-      </div>
-
-      <button onclick="closeModal()">
-        <i data-lucide="x"></i>
-      </button>
-
+  <div class="momentum-wrap">
+    <div class="momentum-label">
+      <div class="momentum-title">Momentum do negócio</div>
+      <div class="momentum-score-num" id="momentum-num">0</div>
     </div>
-
-    <!-- FORM -->
-    <div class="space-y-4">
-
-      <!-- CLIENTE -->
-      <input
-        id="clienteInput"
-        type="text"
-        placeholder="Nome do Cliente"
-        class="w-full h-16 rounded-3xl bg-[#1A1A1A] px-5 text-white placeholder:text-white/30"
-      />
-
-      <!-- SERVIÇO -->
-      <select
-        id="servicoInput"
-        class="w-full h-16 rounded-3xl bg-[#1A1A1A] px-5 text-white"
-      >
-        <option value="">Selecione o serviço</option>
-        <option>Corte</option>
-        <option>Barba</option>
-        <option>Corte + Barba</option>
-        <option>Sobrancelha</option>
-      </select>
-
-      <!-- VALOR -->
-      <input
-        id="valorInput"
-        type="number"
-        placeholder="Valor (R$)"
-        class="w-full h-16 rounded-3xl bg-[#1A1A1A] px-5 text-white placeholder:text-white/30"
-      />
-
-      <!-- DATA -->
-      <input
-        id="dataInput"
-        type="datetime-local"
-        class="w-full h-16 rounded-3xl bg-[#1A1A1A] px-5 text-white"
-      />
-
-      <!-- BTN -->
-      <button
-        onclick="saveAppointment()"
-        class="w-full h-16 rounded-3xl bg-white text-black font-semibold text-lg mt-4"
-      >
-        Salvar Agendamento
-      </button>
-
-    </div>
-
+    <div class="momentum-track"><div class="momentum-fill" id="momentum-fill"></div></div>
+    <div class="momentum-poles"><span>Dormência</span><span>Aceleração</span><span>Momentum</span></div>
   </div>
-
-  <!-- JS -->
-  <script>
-
-    lucide.createIcons();
-
-    // =========================
-    // DATABASE
-    // =========================
-
-    function getAppointments() {
-      return JSON.parse(localStorage.getItem("agendamentos")) || [];
-    }
-
-    function saveAppointments(data) {
-      localStorage.setItem("agendamentos", JSON.stringify(data));
-    }
-
-    // =========================
-    // SCREENS
-    // =========================
-
-    function switchScreen(screen) {
-
-      document
-        .querySelectorAll(".screen")
-        .forEach(s => s.classList.remove("active"));
-
-      if(screen === "dashboard") {
-        document
-          .getElementById("dashboardScreen")
-          .classList.add("active");
-      }
-
-      if(screen === "agenda") {
-        document
-          .getElementById("agendaScreen")
-          .classList.add("active");
-      }
-
-    }
-
-    // =========================
-    // MODAL
-    // =========================
-
-    function openModal() {
-      document
-        .getElementById("overlay")
-        .classList.add("active");
-
-      document
-        .getElementById("bottomSheet")
-        .classList.add("open");
-    }
-
-    function closeModal() {
-      document
-        .getElementById("overlay")
-        .classList.remove("active");
-
-      document
-        .getElementById("bottomSheet")
-        .classList.remove("open");
-    }
-
-    // =========================
-    // SAVE APPOINTMENT
-    // =========================
-
-    function saveAppointment() {
-
-      const nome = document
-        .getElementById("clienteInput")
-        .value
-        .trim();
-
-      const servico = document
-        .getElementById("servicoInput")
-        .value;
-
-      const valor = document
-        .getElementById("valorInput")
-        .value;
-
-      const data = document
-        .getElementById("dataInput")
-        .value;
-
-      if(!nome || !servico || !valor || !data) {
-        alert("Preencha todos os campos.");
-        return;
-      }
-
-      const appointments = getAppointments();
-
-      appointments.push({
-        id: Date.now(),
-        nome,
-        servico,
-        valor: Number(valor),
-        data
-      });
-
-      saveAppointments(appointments);
-
-      clearForm();
-
-      closeModal();
-
-      renderUI();
-
-    }
-
-    // =========================
-    // CLEAR FORM
-    // =========================
-
-    function clearForm() {
-
-      document.getElementById("clienteInput").value = "";
-      document.getElementById("servicoInput").value = "";
-      document.getElementById("valorInput").value = "";
-      document.getElementById("dataInput").value = "";
-
-    }
-
-    // =========================
-    // DELETE APPOINTMENT
-    // =========================
-
-    function deleteAppointment(id) {
-
-      const appointments = getAppointments();
-
-      const updated = appointments.filter(
-        item => item.id !== id
-      );
-
-      saveAppointments(updated);
-
-      renderUI();
-
-    }
-
-    // =========================
-    // FORMAT DATE
-    // =========================
-
-    function formatDate(dateString) {
-
-      const date = new Date(dateString);
-
-      return date.toLocaleString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-
-    }
-
-    // =========================
-    // RENDER UI
-    // =========================
-
-    function renderUI() {
-
-      const appointments = getAppointments();
-
-      // ORDER
-      appointments.sort((a,b) =>
-        new Date(a.data) - new Date(b.data)
-      );
-
-      // METRICS
-      const totalRevenue = appointments.reduce(
-        (acc, item) => acc + item.valor,
-        0
-      );
-
-      document.getElementById(
-        "totalRevenue"
-      ).innerText =
-        totalRevenue.toLocaleString('pt-BR', {
-          style: 'currency',
-          currency: 'BRL'
-        });
-
-      document.getElementById(
-        "totalCuts"
-      ).innerText = appointments.length;
-
-      // DASHBOARD LIST
-      const upcomingList =
-        document.getElementById("upcomingList");
-
-      upcomingList.innerHTML = "";
-
-      if(appointments.length === 0) {
-
-        upcomingList.innerHTML = `
-          <div class="card rounded-[32px] p-6 text-center text-white/40">
-            Nenhum horário cadastrado.
-          </div>
-        `;
-
-      } else {
-
-        appointments.slice(0,5).forEach(item => {
-
-          upcomingList.innerHTML += `
-
-            <div class="card rounded-[32px] p-5 flex items-center justify-between">
-
-              <div class="flex items-center gap-4">
-
-                <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
-                  <i data-lucide="scissors"></i>
-                </div>
-
-                <div>
-
-                  <h3 class="font-semibold text-lg">
-                    ${item.nome}
-                  </h3>
-
-                  <p class="text-white/40 text-sm mt-1">
-                    ${item.servico}
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div class="text-right">
-
-                <p class="font-semibold">
-                  ${formatDate(item.data)}
-                </p>
-
-                <p class="text-emerald-400 text-sm mt-1">
-                  R$ ${item.valor}
-                </p>
-
-              </div>
-
-            </div>
-
-          `;
-
-        });
-
-      }
-
-      // AGENDA LIST
-      const agendaList =
-        document.getElementById("agendaList");
-
-      agendaList.innerHTML = "";
-
-      if(appointments.length === 0) {
-
-        agendaList.innerHTML = `
-          <div class="card rounded-[32px] p-6 text-center text-white/40">
-            Nenhum horário encontrado.
-          </div>
-        `;
-
-      } else {
-
-        appointments.forEach(item => {
-
-          agendaList.innerHTML += `
-
-            <div class="card rounded-[32px] p-5">
-
-              <div class="flex items-start justify-between gap-4">
-
-                <div>
-
-                  <div class="flex items-center gap-3">
-
-                    <h3 class="text-xl font-semibold">
-                      ${item.nome}
-                    </h3>
-
-                    <span class="text-xs px-3 py-1 rounded-full bg-white/5">
-                      ${item.servico}
-                    </span>
-
-                  </div>
-
-                  <p class="text-white/40 mt-3">
-                    ${formatDate(item.data)}
-                  </p>
-
-                  <p class="text-emerald-400 mt-2 font-medium">
-                    R$ ${item.valor}
-                  </p>
-
-                </div>
-
-                <button
-                  onclick="deleteAppointment(${item.id})"
-                  class="w-12 h-12 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center"
-                >
-                  <i data-lucide="trash-2" class="w-5 h-5"></i>
-                </button>
-
-              </div>
-
-            </div>
-
-          `;
-
-        });
-
-      }
-
-      lucide.createIcons();
-
-    }
-
-    // =========================
-    // INIT
-    // =========================
-
-    renderUI();
-
-  </script>
-
+  <div class="grid3" style="margin-bottom:14px">
+    <div class="stat-card"><div class="stat-label">Clientes ativos</div><div class="stat-val" id="stat-ativos">0</div><div class="stat-sub" id="stat-ativos-sub">no pipeline</div></div>
+    <div class="stat-card"><div class="stat-label">Entregas</div><div class="stat-val" id="stat-entregas">0</div><div class="stat-sub">registradas</div></div>
+    <div class="stat-card"><div class="stat-label">Diagnósticos</div><div class="stat-val" id="stat-diag">0</div><div class="stat-sub">realizados</div></div>
+  </div>
+  <div class="pipeline-preview">
+    <div class="pipeline-preview-head"><h3>Pipeline</h3><button class="btn btn-ghost btn-sm" onclick="goPage('pipeline')">Ver tudo</button></div>
+    <div id="home-pipeline-preview"></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><h3>Atividade recente</h3></div>
+    <div id="home-activity"></div>
+  </div>
+</div>
+
+<!-- PIPELINE -->
+<div class="page" id="pg-pipeline">
+  <div class="section-head"><div class="eyebrow">Gestão de clientes</div><h1>Pipeline</h1><p>Acompanhe cada cliente pelo funil de contratação.</p></div>
+  <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="openSheet('sheet-client')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo cliente</button></div>
+  <div id="kanban"></div>
+</div>
+
+<!-- ENTREGAS -->
+<div class="page" id="pg-entregas">
+  <div class="section-head"><div class="eyebrow">Registro de trabalho</div><h1>Entregas</h1><p>Log de tudo que foi entregue, organizado por cliente e data.</p></div>
+  <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="openSheet('sheet-delivery')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar entrega</button></div>
+  <div id="delivery-list"></div>
+</div>
+
+<!-- BRIEFING -->
+<div class="page" id="pg-briefing">
+  <div class="section-head"><div class="eyebrow">Estratégia</div><h1>Briefings</h1><p>Capture o contexto de cada cliente antes de trabalhar.</p></div>
+  <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="openSheet('sheet-brief')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo briefing</button></div>
+  <div id="briefing-list"></div>
+</div>
+
+<!-- DIAGNOSTICO -->
+<div class="page" id="pg-diag">
+  <div id="diag-step-select">
+    <div class="section-head"><div class="eyebrow">Diagnóstico de marca</div><h1>Qual área avaliar?</h1><p>Selecione os módulos para compor o diagnóstico.</p></div>
+    <div class="client-strip">
+      <div class="field"><label>Cliente</label><input type="text" id="d-nome" placeholder="Nome do cliente"></div>
+      <div class="field"><label>Segmento</label><select id="d-seg"><option value="">Selecionar</option><option>Medicina</option><option>Advocacia</option><option>Arquitetura</option><option>Consultoria</option><option>Personal Training</option><option>Nutrição</option><option>Psicologia</option><option>Outro</option></select></div>
+      <div class="field"><label>Data</label><input type="date" id="d-date"></div>
+    </div>
+    <div class="mod-grid">
+      <div class="mod-card" data-mod="sm" onclick="toggleMod(this)">
+        <div class="mod-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="mod-icon"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
+        <h3>Social Media</h3><p style="font-size:12px;color:var(--text3);margin-top:4px;line-height:1.4">Alcance, engajamento e consistência visual.</p>
+      </div>
+      <div class="mod-card" data-mod="pos" onclick="toggleMod(this)">
+        <div class="mod-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="mod-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <h3>Posicionamento</h3><p style="font-size:12px;color:var(--text3);margin-top:4px;line-height:1.4">Proposta de valor, nicho e narrativa.</p>
+      </div>
+      <div class="mod-card" data-mod="tm" onclick="toggleMod(this)">
+        <div class="mod-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="mod-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Trade Marketing</h3><p style="font-size:12px;color:var(--text3);margin-top:4px;line-height:1.4">Parcerias, referral e pós-venda.</p>
+      </div>
+      <div class="mod-card" data-mod="pd" onclick="toggleMod(this)">
+        <div class="mod-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="mod-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <h3>Presença Digital</h3><p style="font-size:12px;color:var(--text3);margin-top:4px;line-height:1.4">Site, Google, SEO e reputação online.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+      <button class="btn btn-ghost btn-sm" onclick="showDiagStep('history');renderDiagHistory()">Ver histórico</button>
+      <button class="btn btn-primary" id="btn-start-diag" onclick="startDiag()" disabled>Preencher dados<svg class="btn-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div id="diag-step-form" style="display:none">
+    <div class="section-head"><div class="eyebrow">Cadastro</div><h1>Dados do cliente</h1></div>
+    <div id="diag-form-cards"></div>
+    <div class="actions">
+      <button class="btn btn-ghost" onclick="showDiagStep('select')">Voltar</button>
+      <button class="btn btn-primary" onclick="gerarDiag()">Gerar diagnóstico<svg class="btn-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div id="diag-step-dashboard" style="display:none">
+    <div class="section-head"><div class="eyebrow">Resultado</div><h1>Painel de análise</h1></div>
+    <div id="diag-dash-content"></div>
+    <div class="actions">
+      <button class="btn btn-ghost" onclick="showDiagStep('form')">Editar dados</button>
+      <button class="btn btn-primary" onclick="showDiagStep('aval');buildAvalContent()">Avaliar resultados<svg class="btn-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div id="diag-step-aval" style="display:none">
+    <div class="section-head"><div class="eyebrow">Avaliação estratégica</div><h1>Sua leitura</h1><p>Sua análise é o que transforma dados em estratégia.</p></div>
+    <div id="diag-aval-content"></div>
+    <div class="aval-section">
+      <div class="aval-head">Síntese</div>
+      <div class="aval-q-card"><div class="aval-q">Qual é a maior oportunidade de alavancagem agora?</div><textarea class="aval-obs" id="sint-op" placeholder="Descreva a oportunidade principal..."></textarea></div>
+      <div class="aval-q-card"><div class="aval-q">Qual o ponto crítico que compromete a evolução da marca?</div><textarea class="aval-obs" id="sint-risco" placeholder="Descreva o risco ou gargalo..."></textarea></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost" onclick="showDiagStep('dashboard')">Voltar ao painel</button>
+      <button class="btn btn-primary" onclick="finalizarAval()">Concluir avaliação<svg class="btn-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="ia-result" id="ia-result" style="display:none">
+      <h3>Avaliação registrada</h3>
+      <p>Suas respostas foram consolidadas. A revisão por IA chegará em breve — ela identificará pontos não percebidos e validará a coerência da análise com os dados do diagnóstico.</p>
+      <span class="ia-badge"><span class="ia-dot"></span>Análise por IA — em breve</span>
+    </div>
+  </div>
+  <div id="diag-step-history" style="display:none">
+    <div class="section-head"><div class="eyebrow">Histórico</div><h1>Diagnósticos anteriores</h1></div>
+    <div id="diag-history-list"></div>
+    <div style="margin-top:16px"><button class="btn btn-ghost" onclick="showDiagStep('select')">Novo diagnóstico</button></div>
+  </div>
+</div>
+
+</main>
+
+<nav>
+  <button class="nav-item active" data-page="home" onclick="goPage('home')">
+    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" data-page="pipeline" onclick="goPage('pipeline')">
+    <div class="nav-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="6" height="18" rx="1"/><rect x="9" y="3" width="6" height="12" rx="1"/><rect x="16" y="3" width="6" height="7" rx="1"/></svg></div>
+    <span class="nav-label">Pipeline</span>
+  </button>
+  <button class="nav-item" data-page="entregas" onclick="goPage('entregas')">
+    <div class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+    <span class="nav-label">Entregas</span>
+  </button>
+  <button class="nav-item" data-page="briefing" onclick="goPage('briefing')">
+    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+    <span class="nav-label">Briefing</span>
+  </button>
+  <button class="nav-item" data-page="diag" onclick="goPage('diag')">
+    <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+    <span class="nav-label">Diagnóstico</span>
+  </button>
+</nav>
+
+<!-- SHEETS -->
+<div class="overlay" id="sheet-client" onclick="closeSheetOutside(event,'sheet-client')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Novo cliente</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label>Nome</label><input id="nc-name" type="text" placeholder="Nome do cliente"></div>
+      <div class="grid2">
+        <div class="field"><label>Segmento</label><select id="nc-seg"><option value="">Selecionar</option><option>Medicina</option><option>Advocacia</option><option>Arquitetura</option><option>Consultoria</option><option>Personal Training</option><option>Nutrição</option><option>Psicologia</option><option>Outro</option></select></div>
+        <div class="field"><label>Estágio</label><select id="nc-stage"><option value="prospect">Prospecção</option><option value="briefing">Briefing</option><option value="proposta">Proposta</option><option value="ativo">Ativo</option><option value="concluido">Concluído</option></select></div>
+      </div>
+      <div class="field"><label>Observação</label><textarea id="nc-obs" placeholder="Contexto ou nota inicial..."></textarea></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost" onclick="closeSheet('sheet-client')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveClient()">Salvar cliente</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="sheet-delivery" onclick="closeSheetOutside(event,'sheet-delivery')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Registrar entrega</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label>Descrição</label><input id="nd-title" type="text" placeholder="O que foi entregue?"></div>
+      <div class="grid2">
+        <div class="field"><label>Cliente</label><select id="nd-client"><option value="">Selecionar</option></select></div>
+        <div class="field"><label>Formato</label><select id="nd-format"><option>Estratégia</option><option>Identidade visual</option><option>Apresentação</option><option>Copy</option><option>Diagnóstico</option><option>Reunião</option><option>Outro</option></select></div>
+      </div>
+      <div class="field"><label>Data</label><input id="nd-date" type="date"></div>
+      <div class="field"><label>Observação</label><textarea id="nd-obs" placeholder="Notas sobre a entrega..."></textarea></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost" onclick="closeSheet('sheet-delivery')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveDelivery()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="sheet-brief" onclick="closeSheetOutside(event,'sheet-brief')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Novo briefing</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="grid2">
+        <div class="field"><label>Cliente</label><select id="nb-client"><option value="">Selecionar</option></select></div>
+        <div class="field"><label>Data</label><input id="nb-date" type="date"></div>
+      </div>
+      <div class="field"><label>Contexto do negócio</label><textarea id="nb-context" placeholder="Quem é, o que faz, como chegou até você..."></textarea></div>
+      <div class="field"><label>Objetivos</label><textarea id="nb-goals" placeholder="O que espera alcançar? Em qual prazo?"></textarea></div>
+      <div class="field"><label>Público-alvo</label><textarea id="nb-audience" placeholder="Quem são as pessoas que ele quer atrair?"></textarea></div>
+      <div class="field"><label>Referências</label><textarea id="nb-refs" placeholder="Marcas ou profissionais que admira..."></textarea></div>
+      <div class="field"><label>Desafios principais</label><textarea id="nb-challenges" placeholder="O que trava o crescimento hoje?"></textarea></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost" onclick="closeSheet('sheet-brief')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveBrief()">Salvar briefing</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="sheet-detail" onclick="closeSheetOutside(event,'sheet-detail')">
+  <div class="sheet"><div class="sheet-handle"></div><div id="sheet-detail-content"></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let clients=JSON.parse(localStorage.getItem('pnl_clients')||'[]');
+let deliveries=JSON.parse(localStorage.getItem('pnl_deliveries')||'[]');
+let briefs=JSON.parse(localStorage.getItem('pnl_briefs')||'[]');
+let diagHistory=JSON.parse(localStorage.getItem('pnl_diag')||'[]');
+function save(){
+  localStorage.setItem('pnl_clients',JSON.stringify(clients));
+  localStorage.setItem('pnl_deliveries',JSON.stringify(deliveries));
+  localStorage.setItem('pnl_briefs',JSON.stringify(briefs));
+  localStorage.setItem('pnl_diag',JSON.stringify(diagHistory));
+}
+(()=>{const s=localStorage.getItem('pnl_theme')||'dark';document.documentElement.setAttribute('data-theme',s);})();
+function toggleTheme(){const n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('pnl_theme',n);}
+let currentPage='home';
+function goPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('pg-'+page).classList.add('active');
+  document.querySelector('[data-page="'+page+'"]')?.classList.add('active');
+  currentPage=page;window.scrollTo({top:0,behavior:'smooth'});
+  if(page==='home')renderHome();
+  if(page==='pipeline')renderPipeline();
+  if(page==='entregas')renderDeliveries();
+  if(page==='briefing')renderBriefs();
+  if(page==='diag'){showDiagStep('select');}
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function fmt(d){if(!d)return'—';return new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})}
+function initials(n){return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function openSheet(id){
+  if(id==='sheet-delivery'||id==='sheet-brief')populateClientSelects();
+  document.getElementById(id).classList.add('open');
+  if(id==='sheet-delivery')document.getElementById('nd-date').value=new Date().toISOString().split('T')[0];
+  if(id==='sheet-brief')document.getElementById('nb-date').value=new Date().toISOString().split('T')[0];
+}
+function closeSheet(id){document.getElementById(id).classList.remove('open')}
+function closeSheetOutside(e,id){if(e.target.id===id)closeSheet(id)}
+function populateClientSelects(){
+  ['nd-client','nb-client'].forEach(id=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    sel.innerHTML='<option value="">Selecionar</option>';
+    clients.forEach(c=>{sel.innerHTML+=`<option value="${c.id}">${c.name}</option>`;});
+  });
+}
+const STAGES=[
+  {key:'prospect',label:'Prospecção',color:'#9FC9E4'},
+  {key:'briefing',label:'Briefing',color:'#FADE79'},
+  {key:'proposta',label:'Proposta',color:'#E56024'},
+  {key:'ativo',label:'Ativo',color:'#4cce90'},
+  {key:'concluido',label:'Concluído',color:'#666'},
+];
+function saveClient(){
+  const name=document.getElementById('nc-name').value.trim();
+  if(!name){showToast('Nome obrigatório');return;}
+  clients.push({id:uid(),name,segment:document.getElementById('nc-seg').value,
+    stage:document.getElementById('nc-stage').value,obs:document.getElementById('nc-obs').value,
+    created:new Date().toISOString()});
+  save();closeSheet('sheet-client');
+  document.getElementById('nc-name').value='';document.getElementById('nc-obs').value='';
+  showToast('Cliente adicionado');
+  if(currentPage==='pipeline')renderPipeline();
+  if(currentPage==='home')renderHome();
+}
+function renderPipeline(){
+  const container=document.getElementById('kanban');container.innerHTML='';
+  STAGES.forEach(stage=>{
+    const sc=clients.filter(c=>c.stage===stage.key);
+    const sec=document.createElement('div');sec.className='stage-section';
+    sec.innerHTML=`<div class="stage-header"><div class="stage-header-left"><div class="stage-indicator" style="background:${stage.color}"></div><div class="stage-title">${stage.label}</div></div><div class="stage-count-badge">${sc.length}</div></div>`;
+    if(!sc.length){sec.innerHTML+=`<div style="font-size:12px;color:var(--text3);padding:8px 4px 4px">Nenhum cliente neste estágio</div>`;}
+    else sc.forEach(c=>{
+      const card=document.createElement('div');card.className='client-card';card.onclick=()=>openClientDetail(c.id);
+      card.innerHTML=`<div class="client-avatar">${initials(c.name)}</div><div class="client-info"><div class="client-name">${c.name}</div><div class="client-seg">${c.segment||'—'} · ${fmt(c.created)}</div></div><svg class="client-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`;
+      sec.appendChild(card);
+    });
+    container.appendChild(sec);
+  });
+}
+function openClientDetail(id){
+  const c=clients.find(x=>x.id===id);if(!c)return;
+  const si=STAGES.find(s=>s.key===c.stage);
+  const opts=STAGES.map(s=>`<option value="${s.key}"${s.key===c.stage?' selected':''}>${s.label}</option>`).join('');
+  document.getElementById('sheet-detail-content').innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+      <div class="client-avatar" style="width:48px;height:48px;border-radius:14px;font-size:18px">${initials(c.name)}</div>
+      <div><div class="sheet-title" style="margin-bottom:4px">${c.name}</div>
+        <div style="display:flex;gap:6px"><span class="chip">${c.segment||'—'}</span><span class="chip" style="background:${si.color}18;color:${si.color};border-color:transparent">${si.label}</span></div>
+      </div>
+    </div>
+    ${c.obs?`<div style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6;background:var(--surf);padding:12px;border-radius:10px;border:1px solid var(--border)">${c.obs}</div>`:''}
+    <div class="field" style="margin-bottom:12px"><label>Mover para estágio</label><select id="detail-stage">${opts}</select></div>
+    <div class="actions-between">
+      <button class="btn btn-ghost btn-sm" style="color:var(--bad);border-color:rgba(229,96,36,.3)" onclick="deleteClient('${c.id}')">Remover</button>
+      <button class="btn btn-primary btn-sm" onclick="moveStage('${c.id}')">Atualizar estágio</button>
+    </div>`;
+  openSheet('sheet-detail');
+}
+function moveStage(id){
+  const c=clients.find(x=>x.id===id);if(!c)return;
+  c.stage=document.getElementById('detail-stage').value;save();
+  closeSheet('sheet-detail');showToast('Estágio atualizado');renderPipeline();renderHome();
+}
+function deleteClient(id){
+  if(!confirm('Remover este cliente?'))return;
+  clients=clients.filter(c=>c.id!==id);save();
+  closeSheet('sheet-detail');showToast('Cliente removido');renderPipeline();renderHome();
+}
+function saveDelivery(){
+  const title=document.getElementById('nd-title').value.trim();
+  if(!title){showToast('Descrição obrigatória');return;}
+  const clientId=document.getElementById('nd-client').value;
+  const clientName=clients.find(c=>c.id===clientId)?.name||'Sem cliente';
+  deliveries.push({id:uid(),title,clientId,clientName,format:document.getElementById('nd-format').value,
+    date:document.getElementById('nd-date').value,obs:document.getElementById('nd-obs').value,created:new Date().toISOString()});
+  save();closeSheet('sheet-delivery');
+  document.getElementById('nd-title').value='';document.getElementById('nd-obs').value='';
+  showToast('Entrega registrada');
+  if(currentPage==='entregas')renderDeliveries();if(currentPage==='home')renderHome();
+}
+function renderDeliveries(){
+  const el=document.getElementById('delivery-list');
+  if(!deliveries.length){el.innerHTML=`<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>Nenhuma entrega ainda.<br>Registre a primeira para começar o histórico.</div>`;return;}
+  const sorted=[...deliveries].sort((a,b)=>new Date(b.created)-new Date(a.created));
+  el.innerHTML=sorted.map(d=>`<div class="delivery-item"><div class="delivery-line"></div><div class="delivery-body"><div class="delivery-title">${d.title}</div><div class="delivery-meta"><span class="delivery-client">${d.clientName}</span><span>·</span><span class="delivery-format">${d.format}</span><span>·</span><span>${fmt(d.date)}</span></div>${d.obs?`<div style="font-size:12px;color:var(--text3);margin-top:4px;line-height:1.5">${d.obs}</div>`:''}</div></div>`).join('');
+}
+function saveBrief(){
+  const clientId=document.getElementById('nb-client').value;
+  const clientName=clients.find(c=>c.id===clientId)?.name||'Sem cliente';
+  const context=document.getElementById('nb-context').value.trim();
+  if(!context){showToast('Contexto obrigatório');return;}
+  briefs.push({id:uid(),clientId,clientName,date:document.getElementById('nb-date').value,context,
+    goals:document.getElementById('nb-goals').value,audience:document.getElementById('nb-audience').value,
+    refs:document.getElementById('nb-refs').value,challenges:document.getElementById('nb-challenges').value,created:new Date().toISOString()});
+  save();closeSheet('sheet-brief');
+  ['nb-context','nb-goals','nb-audience','nb-refs','nb-challenges'].forEach(id=>document.getElementById(id).value='');
+  showToast('Briefing salvo');if(currentPage==='briefing')renderBriefs();
+}
+function renderBriefs(){
+  const el=document.getElementById('briefing-list');
+  if(!briefs.length){el.innerHTML=`<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>Nenhum briefing salvo.</div>`;return;}
+  const sorted=[...briefs].sort((a,b)=>new Date(b.created)-new Date(a.created));
+  el.innerHTML=sorted.map(b=>`<div class="briefing-item" onclick="openBriefDetail('${b.id}')"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><h3>${b.clientName}</h3><span class="chip">${fmt(b.date)}</span></div><p>${b.context}</p></div>`).join('');
+}
+function openBriefDetail(id){
+  const b=briefs.find(x=>x.id===id);if(!b)return;
+  const secs=[{l:'Contexto',v:b.context},{l:'Objetivos',v:b.goals},{l:'Público-alvo',v:b.audience},{l:'Referências',v:b.refs},{l:'Desafios',v:b.challenges}].filter(s=>s.v);
+  document.getElementById('sheet-detail-content').innerHTML=`<div class="sheet-title">${b.clientName}</div><span class="chip" style="margin-bottom:16px;display:inline-block">${fmt(b.date)}</span>${secs.map((s,i)=>`${i>0?'<hr class="divider">':''}<div style="margin-bottom:4px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:4px;font-weight:600">${s.l}</div><div style="font-size:13px;color:var(--text2);line-height:1.6">${s.v}</div></div>`).join('')}<div class="actions"><button class="btn btn-ghost btn-sm" style="color:var(--bad)" onclick="deleteBrief('${b.id}')">Remover</button><button class="btn btn-ghost btn-sm" onclick="closeSheet('sheet-detail')">Fechar</button></div>`;
+  openSheet('sheet-detail');
+}
+function deleteBrief(id){briefs=briefs.filter(b=>b.id!==id);save();closeSheet('sheet-detail');showToast('Briefing removido');renderBriefs();}
+function renderHome(){
+  const now=new Date();const h=now.getHours();
+  document.getElementById('greeting-text').textContent=h<12?'Bom dia.':h<18?'Boa tarde.':'Boa noite.';
+  document.getElementById('home-date').innerHTML=now.toLocaleDateString('pt-BR',{weekday:'long'})+'<br>'+now.toLocaleDateString('pt-BR',{day:'2-digit',month:'long'});
+  const ativos=clients.filter(c=>c.stage==='ativo').length;
+  animateCount('stat-ativos',ativos);animateCount('stat-entregas',deliveries.length);animateCount('stat-diag',diagHistory.length);
+  document.getElementById('stat-ativos-sub').textContent=clients.length>0?`de ${clients.length} no pipeline`:'no pipeline';
+  const m=calcMomentum();
+  setTimeout(()=>{document.getElementById('momentum-fill').style.width=m+'%';animateCount('momentum-num',m);},200);
+  document.getElementById('home-pipeline-preview').innerHTML=STAGES.map(s=>`<div class="stage-row"><div class="stage-dot" style="background:${s.color}"></div><div class="stage-name">${s.label}</div><div class="stage-count">${clients.filter(c=>c.stage===s.key).length}</div></div>`).join('');
+  const acts=[];
+  [...deliveries].sort((a,b)=>new Date(b.created)-new Date(a.created)).slice(0,3).forEach(d=>acts.push({title:'Entrega: '+d.title,meta:d.clientName+' · '+fmt(d.date),type:'ok'}));
+  [...clients].sort((a,b)=>new Date(b.created)-new Date(a.created)).slice(0,2).forEach(c=>acts.push({title:'Cliente: '+c.name,meta:(c.segment||'—')+' · '+fmt(c.created),type:'neutral'}));
+  const actEl=document.getElementById('home-activity');
+  actEl.innerHTML=acts.length?acts.slice(0,5).map(a=>`<div class="activity-item"><div class="activity-line ${a.type}"></div><div class="activity-body"><div class="activity-title">${a.title}</div><div class="activity-meta">${a.meta}</div></div></div>`).join(''):`<div style="font-size:13px;color:var(--text3);padding:8px 0">Nenhuma atividade. Adicione um cliente para começar.</div>`;
+}
+function calcMomentum(){
+  let s=0;
+  if(clients.filter(c=>c.stage==='ativo').length>0)s+=30;
+  if(clients.filter(c=>c.stage!=='concluido').length>2)s+=20;
+  const rd=deliveries.filter(d=>(Date.now()-new Date(d.created))/86400000<=30).length;
+  s+=Math.min(25,rd*8);
+  if(diagHistory.filter(d=>(Date.now()-new Date(d.created))/86400000<=60).length>0)s+=15;
+  if(briefs.length>0)s+=10;
+  return Math.min(100,s);
+}
+function animateCount(id,target){
+  const el=document.getElementById(id);if(!el)return;
+  let cur=0;const inc=target/30;
+  const t=setInterval(()=>{cur=Math.min(cur+inc,target);el.textContent=Math.round(cur);if(cur>=target)clearInterval(t);},16);
+}
+/* DIAG */
+let diagMods=new Set();let diagData={};
+const MOD_META={
+  sm:{label:'Social Media',icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`},
+  pos:{label:'Posicionamento',icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`},
+  tm:{label:'Trade Marketing',icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`},
+  pd:{label:'Presença Digital',icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`},
+};
+const FORM_DEFS={
+  sm:[{id:'sm-seg',label:'Seguidores (Instagram)',type:'number',ph:'Ex: 2400'},{id:'sm-eng',label:'Engajamento (%)',type:'number',ph:'Ex: 3.2'},{id:'sm-freq',label:'Frequência de posts',type:'select',opts:['','Esporádico','1–2x/sem','3–4x/sem','Diário']},{id:'sm-vis',label:'Consistência visual',type:'select',opts:['','Sem identidade','Parcial','Boa','Muito consistente']},{id:'sm-stories',label:'Stories / Reels',type:'select',opts:['','Não usa','Raramente','Regularmente','Estratégico']},{id:'sm-bio',label:'Bio e CTA',type:'select',opts:['','Inexistente','Genérico','Claro','Forte']}],
+  pos:[{id:'pos-pv',label:'Proposta de valor',type:'select',opts:['','Inexistente','Genérica','Razoável','Forte']},{id:'pos-nicho',label:'Nicho definido',type:'select',opts:['','Atende tudo','Semidefinido','Bem definido','Especialista']},{id:'pos-narr',label:'Narrativa',type:'select',opts:['','Não existe','Em dev.','Consistente','Forte']},{id:'pos-preco',label:'Preço percebido',type:'select',opts:['','Commodity','Médio','Premium','Referência']},{id:'pos-prova',label:'Prova social',type:'select',opts:['','Nenhuma','Poucas','Razoável','Robusta']},{id:'pos-id',label:'Identidade visual',type:'select',opts:['','Não existe','Genérica','Definida','Forte e premium']}],
+  tm:[{id:'tm-parc',label:'Parcerias',type:'select',opts:['','Nenhuma','Informais','Estruturadas','Ecossistema']},{id:'tm-pdv',label:'Materiais',type:'select',opts:['','Não possui','Genérico','Bom','Premium']},{id:'tm-ref',label:'Referral',type:'select',opts:['','Não existe','Orgânico','Parcial','Programa ativo']},{id:'tm-ev',label:'Eventos',type:'select',opts:['','Ausente','Eventual','Regular','Liderança']},{id:'tm-pos',label:'Pós-venda',type:'select',opts:['','Inexistente','Básica','Boa','Fidelizadora']}],
+  pd:[{id:'pd-site',label:'Site',type:'select',opts:['','Não possui','Desatualizado','Funcional','Estratégico']},{id:'pd-gmn',label:'Google Meu Negócio',type:'select',opts:['','Não possui','Incompleto','Completo','Otimizado']},{id:'pd-nota',label:'Nota online (1–5)',type:'number',ph:'Ex: 4.7'},{id:'pd-seo',label:'SEO',type:'select',opts:['','Invisível','Fraco','Médio','Forte']},{id:'pd-crm',label:'E-mail / CRM',type:'select',opts:['','Não usa','Lista','Ferramenta','Automação']}],
+};
+const AVAL_QS={
+  sm:['O volume e crescimento de seguidores estão condizentes com o estágio do negócio?','A frequência e consistência visual refletem estratégia definida?'],
+  pos:['A proposta de valor é suficientemente diferenciada para justificar preço premium?','A narrativa de marca é autêntica e consistente em todos os pontos de contato?'],
+  tm:['As parcerias e canais de indicação geram fluxo real de clientes qualificados?','A experiência pós-venda cria fidelização e recompra?'],
+  pd:['A presença digital permite ser encontrado pelo público-alvo com facilidade?','O site e ferramentas estão alinhados ao posicionamento premium?'],
+};
+const BAR_META={
+  sm:{labels:['Frequência','Visual','Stories','Bio'],keys:['freq','vis','stories','bio']},
+  pos:{labels:['Proposta','Nicho','Narrativa','Preço','Prova','ID'],keys:['pv','nicho','narr','preco','prova','id']},
+  tm:{labels:['Parcerias','Materiais','Referral','Eventos','Pós-venda'],keys:['parc','pdv','ref','ev','pos']},
+  pd:{labels:['Site','Google','SEO','CRM'],keys:['site','gmn','seo','crm']},
+};
+function toggleMod(card){const mod=card.dataset.mod;if(diagMods.has(mod)){diagMods.delete(mod);card.classList.remove('selected');}else{diagMods.add(mod);card.classList.add('selected');}document.getElementById('btn-start-diag').disabled=diagMods.size===0;}
+function showDiagStep(step){['select','form','dashboard','aval','history'].forEach(s=>{const el=document.getElementById('diag-step-'+s);if(el)el.style.display=s===step?'block':'none';});window.scrollTo({top:0,behavior:'smooth'});}
+function startDiag(){buildFormCards();showDiagStep('form');}
+function buildFormCards(){
+  const container=document.getElementById('diag-form-cards');container.innerHTML='';
+  diagMods.forEach(mod=>{
+    const meta=MOD_META[mod];const defs=FORM_DEFS[mod];const card=document.createElement('div');card.className='form-card';
+    let fh='<div class="grid2" style="gap:12px">';
+    defs.forEach(f=>{
+      if(f.type==='select'){const opts=f.opts.map((o,i)=>`<option value="${i}">${o}</option>`).join('');fh+=`<div class="field"><label>${f.label}</label><select id="${f.id}">${opts}</select></div>`;}
+      else fh+=`<div class="field"><label>${f.label}</label><input type="${f.type}" id="${f.id}" placeholder="${f.ph||''}"></div>`;
+    });
+    fh+='</div>';
+    card.innerHTML=`<div class="form-card-head"><div class="form-card-icon">${meta.icon}</div><h3>${meta.label}</h3></div>${fh}`;
+    container.appendChild(card);
+  });
+}
+function vi(id){return parseInt(document.getElementById(id)?.value)||0}
+function vf(id){return parseFloat(document.getElementById(id)?.value)||0}
+function vs(id){return document.getElementById(id)?.value||''}
+function collectDiagForm(){
+  diagData.nome=vs('d-nome')||'Cliente';diagData.seg=vs('d-seg')||'Serviço';diagData.date=vs('d-date')||new Date().toISOString().split('T')[0];
+  diagData.sm={seg:vf('sm-seg'),eng:vf('sm-eng'),freq:vi('sm-freq'),vis:vi('sm-vis'),stories:vi('sm-stories'),bio:vi('sm-bio')};
+  diagData.pos={pv:vi('pos-pv'),nicho:vi('pos-nicho'),narr:vi('pos-narr'),preco:vi('pos-preco'),prova:vi('pos-prova'),id:vi('pos-id')};
+  diagData.tm={parc:vi('tm-parc'),pdv:vi('tm-pdv'),ref:vi('tm-ref'),ev:vi('tm-ev'),pos:vi('tm-pos')};
+  diagData.pd={site:vi('pd-site'),gmn:vi('pd-gmn'),nota:vf('pd-nota'),seo:vi('pd-seo'),crm:vi('pd-crm')};
+}
+function avgScore(obj,keys){const vals=keys.map(k=>obj[k]).filter(v=>v>0);if(!vals.length)return 0;return Math.round((vals.reduce((a,b)=>a+b,0)/vals.length/4)*100);}
+function smSc(){const b=avgScore(diagData.sm,['freq','vis','stories','bio']);const bn=diagData.sm.eng>5?10:diagData.sm.eng>3?5:0;return Math.min(100,b+bn);}
+function posSc(){return avgScore(diagData.pos,['pv','nicho','narr','preco','prova','id']);}
+function tmSc(){return avgScore(diagData.tm,['parc','pdv','ref','ev','pos']);}
+function pdSc(){const b=avgScore(diagData.pd,['site','gmn','seo','crm']);const bn=diagData.pd.nota>=4.5?10:diagData.pd.nota>=4?5:0;return Math.min(100,b+bn);}
+function cls(v){return v>=70?'ok':v>=45?'warn':'bad'}
+function gerarDiag(){
+  collectDiagForm();
+  const scores={sm:smSc(),pos:posSc(),tm:tmSc(),pd:pdSc()};
+  const wt={sm:.25,pos:.30,tm:.20,pd:.25};let t=0,w=0;
+  diagMods.forEach(m=>{t+=scores[m]*wt[m];w+=wt[m];});
+  const total=w>0?Math.round(t/w):0;
+  const LABELS=['Diagnóstico crítico','Em desenvolvimento','Boa base, lacunas a corrigir','Marca bem posicionada','Referência no segmento'];
+  const DESCS=['Fragilidades estruturais comprometem conversão. Reposicionamento antes de qualquer execução.','Em construção. Pontos críticos limitam crescimento. Fundação antes de amplificação.','Boas bases, mas lacunas limitam percepção premium e escala. Priorização é o caminho.','Fundações sólidas. Foco em refinamento e consistência.','Marca madura. Foco em expansão e proteção do posicionamento.'];
+  const li=total>=90?4:total>=75?3:total>=55?2:total>=35?1:0;
+  const arcColor=total>=70?'var(--ok)':total>=45?'var(--warn)':'var(--bad)';
+  const circ=220;const offset=circ-(total/100)*circ;
+  let dh=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px"><div><div style="font-size:14px;font-weight:600">${diagData.nome}</div><div style="font-size:12px;color:var(--text3);margin-top:2px">${diagData.seg} · ${fmt(diagData.date)}</div></div><span class="chip">${[...diagMods].map(m=>MOD_META[m].label).join(', ')}</span></div>`;
+  dh+=`<div class="score-hero"><div class="score-ring"><svg width="86" height="86" viewBox="0 0 86 86"><circle cx="43" cy="43" r="35" fill="none" stroke="var(--border)" stroke-width="6"/><circle id="sarc" cx="43" cy="43" r="35" fill="none" stroke="${arcColor}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" style="transition:stroke-dashoffset .9s"/></svg><div class="score-inner"><strong>${total}</strong><span>/ 100</span></div></div><div class="score-copy"><h3>${LABELS[li]}</h3><p>${DESCS[li]}</p></div></div>`;
+  dh+='<div class="dash-grid">';
+  diagMods.forEach(mod=>{
+    const s=scores[mod];const bm=BAR_META[mod];
+    dh+=`<div class="dash-card"><div class="dash-card-top"><span class="dash-card-label">${MOD_META[mod].label}</span><span class="s-chip ${cls(s)}">${s}/100</span></div>`;
+    bm.keys.forEach((k,i)=>{const val=Math.round((diagData[mod][k]/4)*100);dh+=`<div class="bar-row"><span class="bar-lbl">${bm.labels[i]}</span><div class="bar-track"><div class="bar-fill ${cls(val)}" data-t="${val}%"></div></div><span class="bar-v">${val}</span></div>`;});
+    dh+='</div>';
+  });
+  dh+='</div>';
+  const mods=[...diagMods].map(m=>({mod:m,score:scores[m]})).sort((a,b)=>b.score-a.score);
+  let hls='';
+  if(mods.length){
+    hls+=`<div class="hl-item"><div class="hl-bar ok"></div><span>Ponto forte — <strong>${MOD_META[mods[0].mod].label}</strong> é o vetor mais maduro (${mods[0].score}/100).</span></div>`;
+    const weak=mods[mods.length-1];
+    hls+=`<div class="hl-item"><div class="hl-bar bad"></div><span>Gargalo — <strong>${MOD_META[weak.mod].label}</strong> tem o menor índice (${weak.score}/100) e deve ser o primeiro foco.</span></div>`;
+    if(diagMods.has('pos')&&scores.pos<60)hls+=`<div class="hl-item"><div class="hl-bar warn"></div><span>Posicionamento abaixo de 60 limita o efeito de qualquer ação de marketing.</span></div>`;
+    if(diagMods.has('sm')&&diagData.sm.eng>0&&diagData.sm.eng<2)hls+=`<div class="hl-item"><div class="hl-bar warn"></div><span>Engajamento abaixo de 2% indica desconexão entre conteúdo e audiência.</span></div>`;
+    if(diagMods.has('pd')&&diagData.pd.nota>=4.5)hls+=`<div class="hl-item"><div class="hl-bar ok"></div><span>Nota ${diagData.pd.nota} é um ativo estratégico — deve aparecer em todos os materiais.</span></div>`;
+    if(diagMods.has('tm')&&diagData.tm.ref<=1)hls+=`<div class="hl-item"><div class="hl-bar warn"></div><span>Ausência de referral estruturado é oportunidade imediata para profissionais de serviço.</span></div>`;
+  }
+  dh+=`<div class="hl-card"><div class="hl-card-title">Pontos de atenção</div>${hls}</div>`;
+  document.getElementById('diag-dash-content').innerHTML=dh;
+  setTimeout(()=>{const arc=document.getElementById('sarc');if(arc)arc.style.strokeDashoffset=offset;document.querySelectorAll('.bar-fill[data-t]').forEach(el=>el.style.width=el.dataset.t);},80);
+  diagHistory.push({id:uid(),nome:diagData.nome,seg:diagData.seg,date:diagData.date,mods:[...diagMods],scores:{sm:scores.sm,pos:scores.pos,tm:scores.tm,pd:scores.pd},total,created:new Date().toISOString()});
+  save();showDiagStep('dashboard');showToast('Diagnóstico gerado');
+}
+function buildAvalContent(){
+  const c=document.getElementById('diag-aval-content');c.innerHTML='';
+  diagMods.forEach(mod=>{
+    const qs=AVAL_QS[mod];const sec=document.createElement('div');sec.className='aval-section';
+    sec.innerHTML=`<div class="aval-head">${MOD_META[mod].label}</div>`;
+    qs.forEach((q,qi)=>{
+      const name=`aval-${mod}-${qi}`;let lk='<div class="likert">';
+      for(let i=1;i<=5;i++)lk+=`<div class="likert-opt"><input type="radio" name="${name}" id="${name}-${i}" value="${i}"><label for="${name}-${i}">${i}</label></div>`;
+      lk+='</div><div class="likert-legend"><span>Discordo totalmente</span><span>Concordo totalmente</span></div>';
+      sec.innerHTML+=`<div class="aval-q-card"><div class="aval-q">${q}</div>${lk}<textarea class="aval-obs" placeholder="Observação..."></textarea></div>`;
+    });
+    c.appendChild(sec);
+  });
+}
+function finalizarAval(){
+  document.getElementById('ia-result').style.display='block';showToast('Avaliação concluída');
+  setTimeout(()=>document.getElementById('ia-result').scrollIntoView({behavior:'smooth',block:'center'}),200);
+}
+function renderDiagHistory(){
+  const el=document.getElementById('diag-history-list');
+  if(!diagHistory.length){el.innerHTML=`<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>Nenhum diagnóstico realizado ainda.</div>`;return;}
+  const sorted=[...diagHistory].sort((a,b)=>new Date(b.created)-new Date(a.created));
+  el.innerHTML=sorted.map(d=>`<div class="hist-item"><div class="hist-item-top"><h3>${d.nome}</h3><span class="chip ${cls(d.total)}">${d.total}/100</span></div><div class="hist-meta">${d.seg} · ${fmt(d.date)}</div><div class="hist-scores">${d.mods.map(m=>`<span class="chip ${cls(d.scores[m])}">${MOD_META[m].label} ${d.scores[m]}</span>`).join('')}</div></div>`).join('');
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('d-date').value=new Date().toISOString().split('T')[0];
+  renderHome();
+});
+</script>
 </body>
 </html>
