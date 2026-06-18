@@ -58,10 +58,10 @@
             transition: background 0.3s;
         }
 
-        /* ═══ LOGO COM AVERIA BLACK ═══ */
+        /* ═══ LOGO COM ZALANDO SANS EXPANDED ═══ */
         nav .logo {
-            font-family: 'Averia Serif Libre', serif;
-            font-weight: 900;  /* BLACK — peso máximo */
+            font-family: 'Zalando Sans Expanded', 'Arial Black', 'Helvetica Neue', sans-serif;
+            font-weight: 666;
             font-size: 1.8rem;
             letter-spacing: -0.5px;
             color: #1a3b3a;
@@ -90,26 +90,6 @@
 
         nav ul li a:hover {
             color: #4a7a6f;
-        }
-
-        /* ═══ LANGUAGE TOGGLE ═══ */
-        .lang-toggle {
-            background: none;
-            border: 1px solid #1a3b3a;
-            border-radius: 30px;
-            padding: 6px 16px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #1a3b3a;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.5px;
-        }
-
-        .lang-toggle:hover {
-            background: #1a3b3a;
-            color: #f9f6f0;
         }
 
         /* ═══ SECTIONS ═══ */
@@ -161,7 +141,7 @@
         /* ═══ HERO TÍTULO — AVERIA BLACK ═══ */
         #hero h1 {
             font-family: 'Averia Serif Libre', serif;
-            font-weight: 900;  /* BLACK */
+            font-weight: 900;
             font-size: 5.2rem;
             letter-spacing: -2px;
             line-height: 1.05;
@@ -177,7 +157,7 @@
         /* ═══ TAGLINE — AVERIA REGULAR ═══ */
         #hero .tagline {
             font-family: 'Averia Serif Libre', serif;
-            font-weight: 400;  /* REGULAR — leveza */
+            font-weight: 400;
             font-size: 1.8rem;
             color: #3f5a55;
             margin-top: 16px;
@@ -229,14 +209,13 @@
         /* ═══ TÍTULOS DE SEÇÃO — AVERIA BOLD ═══ */
         h2 {
             font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;  /* BOLD */
+            font-weight: 700;
             font-size: 3rem;
             letter-spacing: -1px;
             color: #1a3b3a;
             margin-bottom: 12px;
         }
 
-        /* ═══ SUBTÍTULOS E TEXTOS — INTER ═══ */
         .section-sub {
             font-family: 'Inter', sans-serif;
             font-size: 1.1rem;
@@ -247,10 +226,6 @@
 
         .text-center {
             text-align: center;
-        }
-
-        .mt-16 {
-            margin-top: 16px;
         }
 
         /* ═══ CARDS ═══ */
@@ -295,10 +270,9 @@
             transform: rotate(-6deg) scale(1.1);
         }
 
-        /* ═══ TÍTULOS DOS CARDS — AVERIA BOLD ═══ */
         .card h3 {
             font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;  /* BOLD */
+            font-weight: 700;
             font-size: 1.5rem;
             color: #1a3b3a;
             margin-bottom: 8px;
@@ -311,22 +285,26 @@
             font-size: 0.95rem;
         }
 
-        /* ═══ UNITS GRID ═══ */
+        /* ═══ UNITS GRID — SOMENTE 2 UNIDADES ═══ */
         .units-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
             margin-top: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .unit-card {
             background: white;
             border-radius: 20px;
-            padding: 28px 20px;
+            padding: 32px 24px;
             border: 1px solid rgba(26, 59, 58, 0.04);
             transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
             cursor: default;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+            text-align: center;
         }
 
         .unit-card:hover {
@@ -348,18 +326,17 @@
             margin-bottom: 12px;
         }
 
-        /* ═══ TÍTULOS DAS UNIDADES — AVERIA BOLD ═══ */
         .unit-card h4 {
             font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;  /* BOLD */
-            font-size: 1.5rem;
+            font-weight: 700;
+            font-size: 1.8rem;
             color: #1a3b3a;
             margin-bottom: 4px;
         }
 
         .unit-card .sub {
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #4d6b63;
             font-weight: 350;
         }
@@ -367,24 +344,38 @@
         .unit-card .artist {
             margin-top: 12px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #3f5a55;
             border-top: 1px solid rgba(26, 59, 58, 0.06);
             padding-top: 12px;
         }
 
+        .unit-card .highlight {
+            margin-top: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: #1a3b3a;
+            background: #f2f5f2;
+            padding: 8px 16px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
         /* ═══ ARTISTS ═══ */
         .artist-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 32px;
             margin-top: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .artist-card {
             background: white;
             border-radius: 20px;
-            padding: 28px 22px;
+            padding: 32px 24px;
             text-align: center;
             transition: all 0.4s ease;
             border: 1px solid rgba(26, 59, 58, 0.04);
@@ -401,11 +392,10 @@
             margin-bottom: 8px;
         }
 
-        /* ═══ NOMES DOS ARTISTAS — AVERIA BOLD ═══ */
         .artist-card h4 {
             font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;  /* BOLD */
-            font-size: 1.2rem;
+            font-weight: 700;
+            font-size: 1.3rem;
             color: #1a3b3a;
         }
 
@@ -473,7 +463,7 @@
 
         #contact h2 {
             font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;  /* BOLD */
+            font-weight: 700;
             color: #f2ede6;
             font-size: 3rem;
         }
@@ -513,12 +503,16 @@
             h2 {
                 font-size: 2.4rem;
             }
-            .grid-3,
-            .artist-grid {
+            .grid-3 {
                 grid-template-columns: 1fr 1fr;
             }
             .units-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+            .artist-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
             }
         }
 
@@ -532,9 +526,7 @@
             h2 {
                 font-size: 2rem;
             }
-            .grid-3,
-            .artist-grid,
-            .units-grid {
+            .grid-3 {
                 grid-template-columns: 1fr;
             }
             nav ul {
@@ -561,12 +553,11 @@
     <nav>
         <div class="logo">FADE <span>·</span></div>
         <ul>
-            <li><a href="#essence" data-key="nav-essence">Essência</a></li>
-            <li><a href="#units" data-key="nav-units">Unidades</a></li>
-            <li><a href="#art" data-key="nav-art">Arte</a></li>
-            <li><a href="#ecosystem" data-key="nav-ecosystem">Ecossistema</a></li>
-            <li><a href="#contact" data-key="nav-contact">Contato</a></li>
-            <li><button class="lang-toggle" id="langToggle">EN</button></li>
+            <li><a href="#essence">Essência</a></li>
+            <li><a href="#units">Unidades</a></li>
+            <li><a href="#art">Arte</a></li>
+            <li><a href="#ecosystem">Ecossistema</a></li>
+            <li><a href="#contact">Contato</a></li>
         </ul>
     </nav>
 
@@ -574,8 +565,8 @@
     <section id="hero">
         <div class="container hero-content">
             <h1>FADE <span>Barber House</span></h1>
-            <div class="tagline" data-key="hero-tagline">O cuidado é percebido.</div>
-            <a href="#essence" class="btn" data-key="hero-btn">Conhecer a marca</a>
+            <div class="tagline">O cuidado é percebido.</div>
+            <a href="#essence" class="btn">Conhecer a marca</a>
         </div>
         <div class="hero-image">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -589,25 +580,25 @@
     <!-- ═══ ESSÊNCIA ═══ -->
     <section id="essence">
         <div class="container">
-            <h2 data-key="essence-title">Uma marca, muitas casas</h2>
-            <p class="section-sub" data-key="essence-desc">
+            <h2>Uma marca, muitas casas</h2>
+            <p class="section-sub">
                 A FADE não será uma rede de barbearias. Será uma coleção de casas. Cada casa refletirá o território onde nasceu. Cada casa contará uma história diferente. Uma única verdade as une: o cuidado é percebido.
             </p>
             <div class="grid-3">
                 <div class="card">
                     <div class="icon">🌿</div>
-                    <h3 data-key="card1-title">Essência</h3>
-                    <p data-key="card1-desc">O cuidado é percebido. Hospitalidade sem pressa. Materiais naturais. Cultura forte. Arte com propósito.</p>
+                    <h3>Essência</h3>
+                    <p>O cuidado é percebido. Hospitalidade sem pressa. Materiais naturais. Cultura forte. Arte com propósito.</p>
                 </div>
                 <div class="card">
                     <div class="icon">📍</div>
-                    <h3 data-key="card2-title">Território</h3>
-                    <p data-key="card2-desc">Cada unidade se adapta ao lugar onde nasce. Arquitetura, plantas, artistas e comunidade locais.</p>
+                    <h3>Território</h3>
+                    <p>Cada unidade se adapta ao lugar onde nasce. Arquitetura, plantas, artistas e comunidade locais.</p>
                 </div>
                 <div class="card">
                     <div class="icon">🤝</div>
-                    <h3 data-key="card3-title">Comunidade</h3>
-                    <p data-key="card3-desc">Não abrimos lojas. Entramos em bairros. A comunidade é quem adota a marca e a faz crescer.</p>
+                    <h3>Comunidade</h3>
+                    <p>Não abrimos lojas. Entramos em bairros. A comunidade é quem adota a marca e a faz crescer.</p>
                 </div>
             </div>
         </div>
@@ -616,32 +607,22 @@
     <!-- ═══ UNIDADES ═══ -->
     <section id="units">
         <div class="container">
-            <h2 data-key="units-title">Nossas casas</h2>
-            <p class="section-sub" data-key="units-desc">Cada unidade tem sua própria personalidade, mas todas compartilham a mesma verdade.</p>
+            <h2>Nossas casas</h2>
+            <p class="section-sub" style="margin: 0 auto; text-align: center;">Cada unidade tem sua própria personalidade, mas todas compartilham a mesma verdade.</p>
             <div class="units-grid">
                 <div class="unit-card">
-                    <span class="badge" data-key="unit1-badge">Origem</span>
+                    <span class="badge">Origem</span>
                     <h4>Guaratiba</h4>
-                    <div class="sub" data-key="unit1-sub">A Casa da Natureza</div>
-                    <div class="artist" data-key="unit1-artist">Artista: Nobru Werneck</div>
+                    <div class="sub">A Casa da Natureza</div>
+                    <div class="artist">Artista: Nobru Werneck</div>
+                    <div class="highlight">🌳 Jabuticabeira · Mata Atlântica</div>
                 </div>
                 <div class="unit-card">
-                    <span class="badge" data-key="unit2-badge">História</span>
+                    <span class="badge">História</span>
                     <h4>Centro</h4>
-                    <div class="sub" data-key="unit2-sub">A Casa da História</div>
-                    <div class="artist" data-key="unit2-artist">Artista: Vins Ayres</div>
-                </div>
-                <div class="unit-card">
-                    <span class="badge" data-key="unit3-badge">Estilo</span>
-                    <h4>Zona Sul</h4>
-                    <div class="sub" data-key="unit3-sub">A Casa do Movimento</div>
-                    <div class="artist" data-key="unit3-artist">Artista: Breno Loeser</div>
-                </div>
-                <div class="unit-card">
-                    <span class="badge" data-key="unit4-badge">Comunidade</span>
-                    <h4>Campo Grande</h4>
-                    <div class="sub" data-key="unit4-sub">A Casa do Retorno</div>
-                    <div class="artist" data-key="unit4-artist">Artista: a definir</div>
+                    <div class="sub">A Casa da História</div>
+                    <div class="artist">Artista: Vins Ayres</div>
+                    <div class="highlight">🏛️ Pé-direito alto · Patrimônio</div>
                 </div>
             </div>
         </div>
@@ -650,26 +631,20 @@
     <!-- ═══ ARTE ═══ -->
     <section id="art">
         <div class="container">
-            <h2 data-key="art-title">Arte como identidade</h2>
-            <p class="section-sub" data-key="art-desc">Cada unidade da FADE recebe uma obra permanente criada por um artista local. Não é decoração. É patrimônio da marca.</p>
+            <h2>Arte como identidade</h2>
+            <p class="section-sub" style="margin: 0 auto; text-align: center;">Cada unidade da FADE recebe uma obra permanente criada por um artista local. Não é decoração. É patrimônio da marca.</p>
             <div class="artist-grid">
                 <div class="artist-card">
                     <div class="avatar">🌳</div>
                     <h4>Nobru Werneck</h4>
-                    <div class="role" data-key="artist1-role">Guaratiba</div>
-                    <div class="desc" data-key="artist1-desc">"Violentamente Pacífico" — pintura orgânica inspirada na paisagem da Zona Oeste.</div>
+                    <div class="role">Guaratiba</div>
+                    <div class="desc">"Violentamente Pacífico" — pintura orgânica inspirada na paisagem da Zona Oeste.</div>
                 </div>
                 <div class="artist-card">
                     <div class="avatar">✍️</div>
                     <h4>Vins Ayres</h4>
-                    <div class="role" data-key="artist2-role">Centro</div>
-                    <div class="desc" data-key="artist2-desc">"A Palavra como Presença" — lettering autoral que celebra a história do Rio.</div>
-                </div>
-                <div class="artist-card">
-                    <div class="avatar">🏹</div>
-                    <h4>Breno Loeser</h4>
-                    <div class="role" data-key="artist3-role">Zona Sul</div>
-                    <div class="desc" data-key="artist3-desc">"Oxossi em Movimento" — ilustração contemporânea da força da mata e da identidade brasileira.</div>
+                    <div class="role">Centro</div>
+                    <div class="desc">"A Palavra como Presença" — lettering autoral que celebra a história do Rio.</div>
                 </div>
             </div>
         </div>
@@ -678,20 +653,20 @@
     <!-- ═══ ECOSSISTEMA ═══ -->
     <section id="ecosystem">
         <div class="container">
-            <h2 data-key="eco-title">Um ecossistema de cuidado</h2>
-            <p class="section-sub" data-key="eco-desc">Mais do que uma barbearia. Uma plataforma de marca.</p>
+            <h2>Um ecossistema de cuidado</h2>
+            <p class="section-sub" style="margin: 0 auto; text-align: center;">Mais do que uma barbearia. Uma plataforma de marca.</p>
             <div class="eco-flow">
-                <span class="eco-item" data-key="eco1">FADE Barber House</span>
+                <span class="eco-item">FADE Barber House</span>
                 <span class="eco-arrow">→</span>
-                <span class="eco-item" data-key="eco2">FADE Platform</span>
+                <span class="eco-item">FADE Platform</span>
                 <span class="eco-arrow">→</span>
-                <span class="eco-item" data-key="eco3">FADE Academy</span>
+                <span class="eco-item">FADE Academy</span>
                 <span class="eco-arrow">→</span>
-                <span class="eco-item" data-key="eco4">Produtos próprios</span>
+                <span class="eco-item">Produtos próprios</span>
                 <span class="eco-arrow">→</span>
-                <span class="eco-item" data-key="eco5">Comunidade</span>
+                <span class="eco-item">Comunidade</span>
             </div>
-            <p style="margin-top: 40px; color: #4d6b63; text-align: center; font-size: 0.95rem;" data-key="eco-footer">
+            <p style="margin-top: 40px; color: #4d6b63; text-align: center; font-size: 0.95rem;">
                 Cada elemento fortalece os outros. A barbearia gera relacionamento. A plataforma gera inteligência. A academia gera padronização. A comunidade gera recorrência.
             </p>
         </div>
@@ -700,158 +675,17 @@
     <!-- ═══ CONTATO ═══ -->
     <section id="contact">
         <div class="container text-center">
-            <h2 style="color: #f2ede6;" data-key="contact-title">Construa essa história com a gente</h2>
-            <p style="max-width: 520px; margin: 12px auto 0; color: #b6cbc4;" data-key="contact-desc">
+            <h2 style="color: #f2ede6;">Construa essa história com a gente</h2>
+            <p style="max-width: 520px; margin: 12px auto 0; color: #b6cbc4;">
                 A FADE está construindo a infraestrutura do cuidado masculino no Brasil. Esse é o convite.
             </p>
-            <a href="#" class="btn-outline" data-key="contact-btn">Quero conhecer</a>
+            <a href="#" class="btn-outline">Quero conhecer</a>
         </div>
     </section>
 
     <!-- ═══ SCRIPTS ═══ -->
     <script>
-        // ============================================================
-        // 1. DICIONÁRIO BILÍNGUE
-        // ============================================================
-        const translations = {
-            pt: {
-                'nav-essence': 'Essência',
-                'nav-units': 'Unidades',
-                'nav-art': 'Arte',
-                'nav-ecosystem': 'Ecossistema',
-                'nav-contact': 'Contato',
-                'hero-tagline': 'O cuidado é percebido.',
-                'hero-btn': 'Conhecer a marca',
-                'essence-title': 'Uma marca, muitas casas',
-                'essence-desc': 'A FADE não será uma rede de barbearias. Será uma coleção de casas. Cada casa refletirá o território onde nasceu. Cada casa contará uma história diferente. Uma única verdade as une: o cuidado é percebido.',
-                'card1-title': 'Essência',
-                'card1-desc': 'O cuidado é percebido. Hospitalidade sem pressa. Materiais naturais. Cultura forte. Arte com propósito.',
-                'card2-title': 'Território',
-                'card2-desc': 'Cada unidade se adapta ao lugar onde nasce. Arquitetura, plantas, artistas e comunidade locais.',
-                'card3-title': 'Comunidade',
-                'card3-desc': 'Não abrimos lojas. Entramos em bairros. A comunidade é quem adota a marca e a faz crescer.',
-                'units-title': 'Nossas casas',
-                'units-desc': 'Cada unidade tem sua própria personalidade, mas todas compartilham a mesma verdade.',
-                'unit1-badge': 'Origem',
-                'unit1-sub': 'A Casa da Natureza',
-                'unit1-artist': 'Artista: Nobru Werneck',
-                'unit2-badge': 'História',
-                'unit2-sub': 'A Casa da História',
-                'unit2-artist': 'Artista: Vins Ayres',
-                'unit3-badge': 'Estilo',
-                'unit3-sub': 'A Casa do Movimento',
-                'unit3-artist': 'Artista: Breno Loeser',
-                'unit4-badge': 'Comunidade',
-                'unit4-sub': 'A Casa do Retorno',
-                'unit4-artist': 'Artista: a definir',
-                'art-title': 'Arte como identidade',
-                'art-desc': 'Cada unidade da FADE recebe uma obra permanente criada por um artista local. Não é decoração. É patrimônio da marca.',
-                'artist1-role': 'Guaratiba',
-                'artist1-desc': '"Violentamente Pacífico" — pintura orgânica inspirada na paisagem da Zona Oeste.',
-                'artist2-role': 'Centro',
-                'artist2-desc': '"A Palavra como Presença" — lettering autoral que celebra a história do Rio.',
-                'artist3-role': 'Zona Sul',
-                'artist3-desc': '"Oxossi em Movimento" — ilustração contemporânea da força da mata e da identidade brasileira.',
-                'eco-title': 'Um ecossistema de cuidado',
-                'eco-desc': 'Mais do que uma barbearia. Uma plataforma de marca.',
-                'eco1': 'FADE Barber House',
-                'eco2': 'FADE Platform',
-                'eco3': 'FADE Academy',
-                'eco4': 'Produtos próprios',
-                'eco5': 'Comunidade',
-                'eco-footer': 'Cada elemento fortalece os outros. A barbearia gera relacionamento. A plataforma gera inteligência. A academia gera padronização. A comunidade gera recorrência.',
-                'contact-title': 'Construa essa história com a gente',
-                'contact-desc': 'A FADE está construindo a infraestrutura do cuidado masculino no Brasil. Esse é o convite.',
-                'contact-btn': 'Quero conhecer'
-            },
-            en: {
-                'nav-essence': 'Essence',
-                'nav-units': 'Units',
-                'nav-art': 'Art',
-                'nav-ecosystem': 'Ecosystem',
-                'nav-contact': 'Contact',
-                'hero-tagline': 'Care is perceived.',
-                'hero-btn': 'Discover the brand',
-                'essence-title': 'One brand, many houses',
-                'essence-desc': 'FADE will not be a network of barbershops. It will be a collection of houses. Each house will reflect the territory where it was born. Each house will tell a different story. One single truth unites them: care is perceived.',
-                'card1-title': 'Essence',
-                'card1-desc': 'Care is perceived. Hospitality without haste. Natural materials. Strong culture. Art with purpose.',
-                'card2-title': 'Territory',
-                'card2-desc': 'Each unit adapts to the place where it is born. Local architecture, plants, artists and community.',
-                'card3-title': 'Community',
-                'card3-desc': 'We don\'t open stores. We enter neighborhoods. The community is what adopts the brand and makes it grow.',
-                'units-title': 'Our houses',
-                'units-desc': 'Each unit has its own personality, but all share the same truth.',
-                'unit1-badge': 'Origin',
-                'unit1-sub': 'The House of Nature',
-                'unit1-artist': 'Artist: Nobru Werneck',
-                'unit2-badge': 'History',
-                'unit2-sub': 'The House of History',
-                'unit2-artist': 'Artist: Vins Ayres',
-                'unit3-badge': 'Style',
-                'unit3-sub': 'The House of Movement',
-                'unit3-artist': 'Artist: Breno Loeser',
-                'unit4-badge': 'Community',
-                'unit4-sub': 'The House of Return',
-                'unit4-artist': 'Artist: to be defined',
-                'art-title': 'Art as identity',
-                'art-desc': 'Each FADE unit receives a permanent artwork created by a local artist. It is not decoration. It is brand heritage.',
-                'artist1-role': 'Guaratiba',
-                'artist1-desc': '"Violently Peaceful" — organic painting inspired by the West Zone landscape.',
-                'artist2-role': 'Centro',
-                'artist2-desc': '"The Word as Presence" — original lettering celebrating Rio\'s history.',
-                'artist3-role': 'Zona Sul',
-                'artist3-desc': '"Oxossi in Movement" — contemporary illustration of the strength of the forest and Brazilian identity.',
-                'eco-title': 'An ecosystem of care',
-                'eco-desc': 'More than a barbershop. A brand platform.',
-                'eco1': 'FADE Barber House',
-                'eco2': 'FADE Platform',
-                'eco3': 'FADE Academy',
-                'eco4': 'Own products',
-                'eco5': 'Community',
-                'eco-footer': 'Each element strengthens the others. The barbershop generates relationships. The platform generates intelligence. The academy generates standardization. The community generates recurrence.',
-                'contact-title': 'Build this story with us',
-                'contact-desc': 'FADE is building the infrastructure of male care in Brazil. This is the invitation.',
-                'contact-btn': 'I want to know more'
-            }
-        };
-
-        // ============================================================
-        // 2. FUNÇÃO PARA TROCAR IDIOMA
-        // ============================================================
-        let currentLang = 'pt';
-
-        function switchLanguage(lang) {
-            currentLang = lang;
-            const dict = translations[lang];
-
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (dict[key] !== undefined) {
-                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                        el.placeholder = dict[key];
-                    } else {
-                        el.innerHTML = dict[key];
-                    }
-                }
-            });
-
-            const toggle = document.getElementById('langToggle');
-            toggle.textContent = lang === 'pt' ? 'EN' : 'PT';
-            document.documentElement.lang = lang;
-        }
-
-        // ============================================================
-        // 3. EVENTO DO BOTÃO
-        // ============================================================
-        document.getElementById('langToggle').addEventListener('click', function() {
-            const nextLang = currentLang === 'pt' ? 'en' : 'pt';
-            switchLanguage(nextLang);
-        });
-
-        // ============================================================
-        // 4. PROGRESS BAR E NAV SCROLL
-        // ============================================================
+        // ═══ PROGRESS BAR ═══
         window.addEventListener('scroll', function() {
             const scrollTop = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -868,9 +702,7 @@
             }
         });
 
-        // ============================================================
-        // 5. SMOOTH SCROLL
-        // ============================================================
+        // ═══ SMOOTH SCROLL ═══
         document.querySelectorAll('nav a[href^="#"]').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
