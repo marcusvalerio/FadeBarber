@@ -1,895 +1,1251 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FADE Barber House · O cuidado é percebido</title>
-    <!-- ═══ FONTES ═══ -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Averia+Serif+Libre:wght@400;700;900&display=swap" rel="stylesheet" />
-    <style>
-        /* ═══ RESET & BASE ═══ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f9f6f0;
-            color: #1e2b2c;
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* ═══ PROGRESS BAR ═══ */
-        #progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: #1a3b3a;
-            width: 0%;
-            z-index: 999;
-            transition: width 0.15s ease;
-            box-shadow: 0 0 8px rgba(26, 59, 58, 0.3);
-        }
-
-        /* ═══ NAV ═══ */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 18px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(249, 246, 240, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(26, 59, 58, 0.06);
-            z-index: 100;
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-
-        /* ═══ LOGO COM ZALANDO SANS EXPANDED ═══ */
-        nav .logo {
-            font-family: 'Zalando Sans Expanded', 'Arial Black', 'Helvetica Neue', sans-serif;
-            font-weight: 666;
-            font-size: 1.8rem;
-            letter-spacing: -0.5px;
-            color: #1a3b3a;
-            transition: transform 0.2s ease;
-        }
-
-        nav .logo:hover {
-            transform: scale(1.02);
-        }
-
-        nav .logo span {
-            font-weight: 400;
-            color: #5a7a79;
-        }
-
-        nav ul {
-            display: flex;
-            gap: 32px;
-            list-style: none;
-            align-items: center;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #1e2b2c;
-            font-size: 0.9rem;
-            font-weight: 450;
-            font-family: 'Inter', sans-serif;
-            transition: color 0.2s, transform 0.2s;
-            display: inline-block;
-        }
-
-        nav ul li a:hover {
-            color: #4a7a6f;
-            transform: translateY(-2px);
-        }
-
-        /* ═══ SECTIONS ═══ */
-        section {
-            padding: 100px 0 80px 0;
-            opacity: 0;
-            transform: translateY(40px);
-            animation: fadeUp 1s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
-        }
-
-        section:nth-of-type(2) { animation-delay: 0.2s; }
-        section:nth-of-type(3) { animation-delay: 0.4s; }
-        section:nth-of-type(4) { animation-delay: 0.6s; }
-        section:nth-of-type(5) { animation-delay: 0.8s; }
-        section:nth-of-type(6) { animation-delay: 1.0s; }
-
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ═══ HERO ═══ */
-        #hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            background: linear-gradient(145deg, #f9f6f0 0%, #e8e0d4 100%);
-            padding-top: 80px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="30" cy="30" r="3" fill="%231a3b3a" opacity="0.05"/><circle cx="170" cy="80" r="5" fill="%231a3b3a" opacity="0.04"/><circle cx="80" cy="150" r="4" fill="%231a3b3a" opacity="0.06"/></svg>');
-            background-size: 200px 200px;
-            opacity: 0.5;
-            animation: drift 60s linear infinite;
-        }
-
-        @keyframes drift {
-            from { transform: translateX(0) translateY(0); }
-            to { transform: translateX(-100px) translateY(-100px); }
-        }
-
-        #hero .hero-content {
-            max-width: 720px;
-            position: relative;
-            z-index: 2;
-        }
-
-        #hero h1 {
-            font-family: 'Averia Serif Libre', serif;
-            font-weight: 900;
-            font-size: 5.2rem;
-            letter-spacing: -2px;
-            line-height: 1.05;
-            color: #1a3b3a;
-            animation: float 6s ease-in-out infinite;
-            text-shadow: 0 4px 20px rgba(26, 59, 58, 0.08);
-        }
-
-        #hero h1 span {
-            font-weight: 400;
-            color: #3f6b63;
-        }
-
-        #hero .tagline {
-            font-family: 'Averia Serif Libre', serif;
-            font-weight: 400;
-            font-size: 1.8rem;
-            color: #3f5a55;
-            margin-top: 16px;
-            border-left: 4px solid #3f6b63;
-            padding-left: 20px;
-            animation: float 6s ease-in-out 0.5s infinite;
-        }
-
-        #hero .btn {
-            margin-top: 40px;
-            display: inline-block;
-            background: #1a3b3a;
-            color: #f9f6f0;
-            padding: 14px 44px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-weight: 450;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.3px;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
-            box-shadow: 0 8px 24px rgba(26, 59, 58, 0.15);
-            position: relative;
-            overflow: hidden;
-        }
-
-        #hero .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            transform: scale(0.8);
-        }
-
-        #hero .btn:hover {
-            background: #2a5a54;
-            transform: scale(1.03) translateY(-3px);
-            box-shadow: 0 14px 32px rgba(26, 59, 58, 0.25);
-        }
-
-        #hero .btn:hover::after {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .hero-image {
-            position: absolute;
-            right: 40px;
-            bottom: 40px;
-            width: 40%;
-            max-width: 500px;
-            opacity: 0.15;
-            pointer-events: none;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-
-        /* ═══ TÍTULOS DE SEÇÃO — AVERIA BOLD ═══ */
-        h2 {
-            font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;
-            font-size: 3rem;
-            letter-spacing: -1px;
-            color: #1a3b3a;
-            margin-bottom: 12px;
-            position: relative;
-            display: inline-block;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: #3f6b63;
-            border-radius: 2px;
-            transition: width 0.4s ease;
-        }
-
-        h2:hover::after {
-            width: 100%;
-        }
-
-        .section-sub {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
-            color: #4d6b63;
-            max-width: 640px;
-            line-height: 1.7;
-            margin: 12px 0 0 0;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-center h2::after {
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .text-center .section-sub {
-            margin: 12px auto 0 auto;
-        }
-
-        /* ═══ CARDS ═══ */
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-            margin-top: 48px;
-        }
-
-        .card {
-            background: white;
-            padding: 32px 24px;
-            border-radius: 20px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
-            border: 1px solid rgba(26, 59, 58, 0.04);
-            animation: float 5s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:nth-child(2) { animation-delay: 0.3s; }
-        .card:nth-child(3) { animation-delay: 0.6s; }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #1a3b3a, #3f6b63);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s ease;
-        }
-
-        .card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .card:hover {
-            transform: translateY(-12px) scale(1.01);
-            box-shadow: 0 24px 56px rgba(26, 59, 58, 0.08);
-            border-color: rgba(26, 59, 58, 0.12);
-        }
-
-        .card .icon {
-            font-size: 2.4rem;
-            margin-bottom: 12px;
-            display: inline-block;
-            transition: transform 0.4s ease, filter 0.4s ease;
-        }
-
-        .card:hover .icon {
-            transform: rotate(-8deg) scale(1.1);
-            filter: drop-shadow(0 4px 8px rgba(26, 59, 58, 0.15));
-        }
-
-        .card h3 {
-            font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #1a3b3a;
-            margin-bottom: 8px;
-        }
-
-        .card p {
-            font-family: 'Inter', sans-serif;
-            color: #4d5f5a;
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        /* ═══ UNITS GRID ═══ */
-        .units-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 32px;
-            margin-top: 48px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .unit-card {
-            background: white;
-            border-radius: 20px;
-            padding: 32px 24px;
-            border: 1px solid rgba(26, 59, 58, 0.04);
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
-            cursor: default;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .unit-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(26, 59, 58, 0.02) 0%, transparent 50%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .unit-card:hover::after {
-            opacity: 1;
-        }
-
-        .unit-card:hover {
-            transform: translateY(-16px) scale(1.01);
-            box-shadow: 0 32px 64px rgba(26, 59, 58, 0.08);
-            border-color: rgba(26, 59, 58, 0.12);
-        }
-
-        .unit-card .badge {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #3f6b63;
-            background: #edf3f0;
-            padding: 4px 12px;
-            border-radius: 30px;
-            display: inline-block;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .unit-card:hover .badge {
-            background: #1a3b3a;
-            color: #f9f6f0;
-            transform: scale(1.05);
-        }
-
-        .unit-card h4 {
-            font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;
-            font-size: 2rem;
-            color: #1a3b3a;
-            margin-bottom: 4px;
-        }
-
-        .unit-card .sub {
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            color: #4d6b63;
-            font-weight: 350;
-        }
-
-        .unit-card .artist {
-            margin-top: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            color: #3f5a55;
-            border-top: 1px solid rgba(26, 59, 58, 0.06);
-            padding-top: 12px;
-            transition: color 0.3s ease;
-        }
-
-        .unit-card:hover .artist {
-            color: #1a3b3a;
-        }
-
-        .unit-card .highlight {
-            margin-top: 16px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            color: #1a3b3a;
-            background: #f2f5f2;
-            padding: 8px 16px;
-            border-radius: 30px;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        .unit-card:hover .highlight {
-            background: #1a3b3a;
-            color: #f9f6f0;
-            transform: scale(1.05);
-        }
-
-        /* ═══ ARTISTS ═══ */
-        .artist-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 32px;
-            margin-top: 48px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .artist-card {
-            background: white;
-            border-radius: 20px;
-            padding: 32px 24px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
-            border: 1px solid rgba(26, 59, 58, 0.04);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
-        }
-
-        .artist-card:hover {
-            transform: scale(1.03) translateY(-8px);
-            box-shadow: 0 24px 48px rgba(26, 59, 58, 0.06);
-            border-color: rgba(26, 59, 58, 0.10);
-        }
-
-        .artist-card .avatar {
-            font-size: 3.2rem;
-            margin-bottom: 8px;
-            display: inline-block;
-            transition: transform 0.4s ease;
-        }
-
-        .artist-card:hover .avatar {
-            transform: rotate(-6deg) scale(1.1);
-        }
-
-        .artist-card h4 {
-            font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: #1a3b3a;
-        }
-
-        .artist-card .role {
-            font-family: 'Inter', sans-serif;
-            color: #4d6b63;
-            font-size: 0.9rem;
-            font-weight: 350;
-        }
-
-        .artist-card .desc {
-            margin-top: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            color: #3f5a55;
-            line-height: 1.5;
-        }
-
-        /* ═══ ECOSYSTEM ═══ */
-        .eco-flow {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 12px 32px;
-            margin-top: 48px;
-            padding: 40px 20px;
-            background: white;
-            border-radius: 40px;
-            border: 1px solid rgba(26, 59, 58, 0.04);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-        }
-
-        .eco-item {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 450;
-            color: #1a3b3a;
-            padding: 10px 18px;
-            background: #f2f5f2;
-            border-radius: 60px;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
-            animation: float 5s ease-in-out infinite;
-            cursor: default;
-        }
-
-        .eco-item:hover {
-            background: #1a3b3a;
-            color: #f9f6f0;
-            transform: scale(1.06) translateY(-4px);
-            box-shadow: 0 8px 24px rgba(26, 59, 58, 0.15);
-        }
-
-        .eco-arrow {
-            font-size: 1.8rem;
-            color: #6b8a83;
-            font-weight: 200;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-
-        /* ═══ CONTACT ═══ */
-        #contact {
-            background: #1a3b3a;
-            color: #f2ede6;
-            border-radius: 40px 40px 0 0;
-            padding: 80px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #contact::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="40" cy="40" r="4" fill="%23f2ede6" opacity="0.04"/><circle cx="160" cy="120" r="6" fill="%23f2ede6" opacity="0.03"/><circle cx="100" cy="180" r="3" fill="%23f2ede6" opacity="0.05"/></svg>');
-            background-size: 200px 200px;
-            opacity: 0.5;
-        }
-
-        #contact h2 {
-            font-family: 'Averia Serif Libre', serif;
-            font-weight: 700;
-            color: #f2ede6;
-            font-size: 3rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        #contact h2::after {
-            background: #f2ede6;
-        }
-
-        #contact p {
-            font-family: 'Inter', sans-serif;
-            color: #b6cbc4;
-            position: relative;
-            z-index: 2;
-        }
-
-        .btn-outline {
-            display: inline-block;
-            margin-top: 24px;
-            padding: 14px 44px;
-            border-radius: 40px;
-            border: 1px solid #f2ede6;
-            color: #f2ede6;
-            text-decoration: none;
-            font-family: 'Inter', sans-serif;
-            font-weight: 450;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
-            position: relative;
-            z-index: 2;
-            overflow: hidden;
-        }
-
-        .btn-outline::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: #f2ede6;
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.4s ease;
-            z-index: -1;
-        }
-
-        .btn-outline:hover {
-            color: #1a3b3a;
-            border-color: #f2ede6;
-            transform: scale(1.03) translateY(-3px);
-            box-shadow: 0 8px 32px rgba(242, 237, 230, 0.15);
-        }
-
-        .btn-outline:hover::before {
-            transform: scaleX(1);
-            transform-origin: left;
-        }
-
-        /* ═══ RESPONSIVE ═══ */
-        @media (max-width: 900px) {
-            #hero h1 {
-                font-size: 3.6rem;
-            }
-            #hero .tagline {
-                font-size: 1.4rem;
-            }
-            h2 {
-                font-size: 2.4rem;
-            }
-            .grid-3 {
-                grid-template-columns: 1fr 1fr;
-            }
-            .units-grid {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-            }
-            .artist-grid {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-            }
-            .hero-image {
-                display: none;
-            }
-        }
-
-        @media (max-width: 640px) {
-            #hero h1 {
-                font-size: 2.8rem;
-            }
-            #hero .tagline {
-                font-size: 1.2rem;
-            }
-            h2 {
-                font-size: 2rem;
-            }
-            .grid-3 {
-                grid-template-columns: 1fr;
-            }
-            nav ul {
-                gap: 16px;
-            }
-            nav ul li a {
-                font-size: 0.8rem;
-            }
-            .eco-arrow {
-                display: none;
-            }
-            nav .logo {
-                font-size: 1.4rem;
-            }
-            #contact {
-                border-radius: 20px 20px 0 0;
-                padding: 60px 0;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FADE Barber House</title>
+<link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── ZALANDO SANS EXPANDED — via font-face with system fallback ── */
+@font-face {
+  font-family: 'ZalandoSans';
+  src: local('Zalando Sans Expanded'), local('ZalandoSansExpanded');
+  font-weight: 700;
+  font-style: normal;
+}
+/* fallback stack that mimics wide expanded geometric sans */
+:root {
+  --font-brand: 'ZalandoSans', 'Barlow Condensed', 'Arial Black', 'Impact', sans-serif;
+  --font-display: 'Averia Serif Libre', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --bg: #f9f6f0;
+  --dark: #1a3b3a;
+  --mid: #3f6b63;
+  --light-bg: #f2ede6;
+  --sec: #4d6b63;
+  --ter: #3f5a55;
+  --stone: #c4b89a;
+  --stone-light: #ddd3be;
+
+  /* soap stone palette — greyed olive greens + warm grays */
+  --ss1: #9eab9e;
+  --ss2: #8a9e8a;
+  --ss3: #b8c4b4;
+  --ss4: #cdd4c4;
+  --ss5: #a8b4a0;
+  --ss6: #7a8c7a;
+  --ss7: #d4dbd0;
+  --ss8: #e2e8de;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 2px; width: 0%;
+  background: var(--mid);
+  z-index: 9999;
+  transition: width 0.1s linear;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem; height: 64px;
+  background: rgba(249,246,240,0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(63,107,99,0.07);
+  transition: all 0.4s ease;
+}
+.nav-logo {
+  font-family: var(--font-brand);
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--dark);
+  text-decoration: none;
+}
+.nav-logo .dot { color: var(--stone); font-weight: 300; letter-spacing: 0; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+.nav-links a {
+  font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sec); text-decoration: none;
+  transition: color 0.3s ease; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -2px; left: 0;
+  width: 0; height: 1px; background: var(--mid);
+  transition: width 0.3s ease;
+}
+.nav-links a:hover { color: var(--dark); }
+.nav-links a:hover::after { width: 100%; }
+
+.lang-toggle { display: flex; gap: 0.4rem; align-items: center; }
+.lang-btn {
+  background: none; border: 1px solid rgba(63,107,99,0.22);
+  color: var(--sec); font-family: var(--font-body);
+  font-size: 0.62rem; font-weight: 500;
+  letter-spacing: 0.1em; padding: 0.22rem 0.55rem;
+  border-radius: 2px; cursor: pointer;
+  transition: all 0.3s ease;
+}
+.lang-btn.active { background: var(--dark); color: var(--light-bg); border-color: var(--dark); }
+.lang-btn:hover:not(.active) { border-color: var(--mid); color: var(--dark); }
+
+/* ── HERO ── */
+#hero {
+  position: relative; height: 100vh; min-height: 720px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+/* === SOAP STONE TEXTURE — multi-layer CSS === */
+/* Layer 1: Base mineral color field */
+.ss-base {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 120% 80% at 15% 25%, #b8c9b2 0%, transparent 55%),
+    radial-gradient(ellipse 80% 100% at 85% 75%, #9aae94 0%, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 50% 10%, #cdd8c8 0%, transparent 45%),
+    radial-gradient(ellipse 60% 80% at 70% 40%, #a8b8a4 0%, transparent 40%),
+    radial-gradient(ellipse 90% 50% at 30% 80%, #bcc9b6 0%, transparent 50%),
+    linear-gradient(145deg, #c8d4c4 0%, #b0c0aa 20%, #a4b49e 35%, #bcc8b8 50%, #a8b8a4 65%, #b8c8b2 80%, #c4d0be 100%);
+}
+
+/* Layer 2: Stone grain — fine diagonal striations */
+.ss-grain {
+  position: absolute; inset: 0; z-index: 1;
+  background-image:
+    repeating-linear-gradient(18deg,
+      transparent 0, transparent 3px,
+      rgba(80,100,80,0.028) 3px, rgba(80,100,80,0.028) 4px),
+    repeating-linear-gradient(108deg,
+      transparent 0, transparent 7px,
+      rgba(60,80,60,0.02) 7px, rgba(60,80,60,0.02) 8px),
+    repeating-linear-gradient(63deg,
+      transparent 0, transparent 12px,
+      rgba(100,120,90,0.015) 12px, rgba(100,120,90,0.015) 13px);
+}
+
+/* Layer 3: Mineral veins — organic long streaks */
+.ss-veins {
+  position: absolute; inset: 0; z-index: 2;
+  background-image:
+    radial-gradient(ellipse 700px 5px at 25% 35%, rgba(70,90,70,0.09) 0%, transparent 100%),
+    radial-gradient(ellipse 500px 3px at 75% 60%, rgba(60,80,60,0.07) 0%, transparent 100%),
+    radial-gradient(ellipse 400px 7px at 50% 15%, rgba(80,100,75,0.06) 0%, transparent 100%),
+    radial-gradient(ellipse 600px 4px at 20% 80%, rgba(55,75,55,0.08) 0%, transparent 100%),
+    radial-gradient(ellipse 350px 2px at 65% 45%, rgba(90,110,85,0.05) 0%, transparent 100%),
+    radial-gradient(ellipse 250px 8px at 10% 55%, rgba(65,85,65,0.07) 0%, transparent 100%);
+}
+
+/* Layer 4: Surface micro-texture — subtle noise simulation */
+.ss-micro {
+  position: absolute; inset: 0; z-index: 3;
+  background-image:
+    radial-gradient(ellipse 2px 2px at 8% 12%, rgba(255,255,255,0.18) 0%, transparent 100%),
+    radial-gradient(ellipse 3px 2px at 23% 67%, rgba(255,255,255,0.12) 0%, transparent 100%),
+    radial-gradient(ellipse 2px 3px at 45% 33%, rgba(255,255,255,0.14) 0%, transparent 100%),
+    radial-gradient(ellipse 2px 2px at 67% 78%, rgba(255,255,255,0.1) 0%, transparent 100%),
+    radial-gradient(ellipse 3px 2px at 88% 22%, rgba(255,255,255,0.15) 0%, transparent 100%),
+    radial-gradient(ellipse 2px 3px at 55% 90%, rgba(255,255,255,0.11) 0%, transparent 100%),
+    radial-gradient(ellipse 30px 20px at 35% 50%, rgba(210,225,205,0.12) 0%, transparent 100%),
+    radial-gradient(ellipse 50px 30px at 70% 20%, rgba(195,215,190,0.1) 0%, transparent 100%);
+}
+
+/* Layer 5: Dark atmospheric overlay for text */
+.ss-overlay {
+  position: absolute; inset: 0; z-index: 4;
+  background:
+    linear-gradient(160deg,
+      rgba(18,45,38,0.72) 0%,
+      rgba(20,50,42,0.58) 40%,
+      rgba(15,40,34,0.65) 100%);
+}
+
+/* Layer 6: Floating dots parallax */
+.hero-dots {
+  position: absolute; inset: 0; z-index: 5;
+  background-image: radial-gradient(circle, rgba(242,237,230,0.1) 1px, transparent 1px);
+  background-size: 44px 44px;
+  will-change: transform;
+}
+
+.hero-content {
+  position: relative; z-index: 6;
+  text-align: center; padding: 0 2rem;
+  max-width: 960px;
+}
+
+.hero-eyebrow {
+  font-size: 0.62rem; font-weight: 400;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: rgba(242,237,230,0.45);
+  margin-bottom: 1.8rem;
+  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+/* FADE logotype — Zalando Sans Expanded weight 666 ≈ 700 */
+.hero-logotype {
+  font-family: var(--font-brand);
+  font-weight: 900;
+  font-size: clamp(5.5rem, 16vw, 13rem);
+  line-height: 0.88;
+  color: var(--light-bg);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.08s both;
+  position: relative;
+  display: inline-block;
+}
+
+.hero-logotype .dot-mid {
+  color: rgba(242,237,230,0.28);
+  font-size: 0.45em;
+  vertical-align: middle;
+  margin: 0 0.08em;
+  font-weight: 300;
+}
+
+.hero-barber-house {
+  font-family: var(--font-brand);
+  font-weight: 400;
+  font-size: clamp(0.75rem, 2.2vw, 1.25rem);
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  color: rgba(242,237,230,0.38);
+  margin-top: 0.6rem;
+  display: block;
+  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.14s both;
+}
+
+.hero-tagline-wrap {
+  display: flex; align-items: center;
+  justify-content: center; gap: 1rem;
+  margin: 2.8rem auto 0;
+  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.22s both;
+}
+.hero-tagline-line {
+  width: 2px; height: 44px;
+  background: rgba(242,237,230,0.28); flex-shrink: 0;
+}
+.hero-tagline {
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+  font-weight: 300; font-style: italic;
+  color: rgba(242,237,230,0.62);
+  letter-spacing: 0.1em;
+}
+
+.hero-cta {
+  margin-top: 3.5rem;
+  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+}
+
+.btn-stone {
+  display: inline-block;
+  padding: 0.85rem 2.5rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--dark);
+  background: rgba(210,225,205,0.88);
+  border: 1px solid rgba(210,225,205,0.5);
+  cursor: pointer; text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  position: relative; overflow: hidden;
+}
+.btn-stone:hover {
+  background: var(--light-bg); letter-spacing: 0.28em;
+  color: var(--dark);
+}
+
+.btn-ghost {
+  display: inline-block;
+  padding: 0.85rem 2.5rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(242,237,230,0.7);
+  background: transparent;
+  border: 1px solid rgba(242,237,230,0.2);
+  cursor: pointer; text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.btn-ghost:hover {
+  color: var(--light-bg);
+  border-color: rgba(242,237,230,0.45);
+  letter-spacing: 0.28em;
+}
+
+.hero-scroll-indicator {
+  position: absolute; bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%); z-index: 6;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.5rem;
+  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.7s both;
+}
+.scroll-label {
+  font-size: 0.58rem; letter-spacing: 0.22em;
+  text-transform: uppercase; color: rgba(242,237,230,0.3);
+}
+.scroll-line {
+  width: 1px; height: 44px;
+  background: linear-gradient(to bottom, rgba(242,237,230,0.35), transparent);
+  animation: scrollPulse 2.2s ease-in-out infinite;
+}
+.hero-float { animation: heroFloat 9s ease-in-out infinite; }
+
+/* ── NUMBERS / INVESTIDOR ── */
+#numbers {
+  background: var(--dark);
+  padding: 6rem 2rem;
+  position: relative; overflow: hidden;
+}
+#numbers::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(63,107,99,0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.numbers-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+.numbers-label {
+  font-size: 0.6rem; font-weight: 400; letter-spacing: 0.3em;
+  text-transform: uppercase; color: rgba(242,237,230,0.3);
+  margin-bottom: 3rem;
+}
+.numbers-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: rgba(242,237,230,0.07);
+  border: 1px solid rgba(242,237,230,0.07);
+}
+.number-col {
+  padding: 2.5rem 2rem;
+  background: var(--dark);
+}
+.number-col-head {
+  font-size: 0.58rem; font-weight: 400; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(242,237,230,0.3);
+  margin-bottom: 2.5rem; padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(242,237,230,0.08);
+}
+.number-row { margin-bottom: 1.6rem; }
+.number-indicator {
+  font-size: 0.62rem; font-weight: 300; color: rgba(242,237,230,0.4);
+  margin-bottom: 0.35rem; letter-spacing: 0.06em;
+}
+.number-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--light-bg);
+  line-height: 1;
+}
+.number-value.highlight { color: #a8c8a0; }
+.number-col.active { background: #0f2624; }
+.number-col.active .number-col-head { color: rgba(168,200,160,0.6); }
+
+/* ── MANIFESTO ── */
+#manifesto {
+  background: var(--mid);
+  padding: 7rem 2rem;
+  text-align: center; overflow: hidden; position: relative;
+}
+#manifesto::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(242,237,230,0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.manifesto-text {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem,5vw,3.8rem);
+  line-height: 1.2; color: var(--light-bg);
+  max-width: 820px; margin: 0 auto;
+  letter-spacing: -0.01em;
+}
+.manifesto-text em { font-style: italic; color: rgba(242,237,230,0.45); }
+.manifesto-sub {
+  margin-top: 2rem; font-size: 0.72rem; font-weight: 300;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(242,237,230,0.3);
+}
+
+/* ── SHARED SECTION STYLES ── */
+section:not(#hero):not(#manifesto):not(#numbers):not(#contact):not(#tese) {
+  padding: 7rem 2rem;
+}
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-eyebrow {
+  font-size: 0.6rem; font-weight: 400;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 1rem;
+}
+.section-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2rem,4vw,3rem);
+  color: var(--dark); line-height: 1.15; margin-bottom: 1rem;
+}
+.section-sub {
+  font-size: 0.9rem; font-weight: 300;
+  color: var(--sec); max-width: 560px; line-height: 1.85;
+}
+
+/* ── ESSÊNCIA ── */
+#essencia { background: var(--bg); }
+.essencia-intro { max-width: 580px; margin-bottom: 5rem; }
+.essencia-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+}
+.essence-card {
+  background: white;
+  border: 1px solid rgba(63,107,99,0.1);
+  padding: 2.5rem 2rem;
+  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+  position: relative; overflow: hidden; cursor: default;
+}
+.essence-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--mid);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.essence-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px rgba(26,59,58,0.1);
+  border-color: rgba(63,107,99,0.2);
+}
+.essence-card:hover::before { transform: scaleX(1); }
+.card-icon { font-size: 1.4rem; margin-bottom: 1.5rem; display: block; }
+.card-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.1rem; color: var(--dark); margin-bottom: 0.8rem;
+}
+.card-text { font-size: 0.83rem; font-weight: 300; color: var(--sec); line-height: 1.85; }
+
+/* ── CASAS ── */
+#casas { background: var(--light-bg); }
+.casas-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 2rem; margin-top: 4rem;
+}
+.casa-card {
+  background: white;
+  border: 1px solid rgba(63,107,99,0.1);
+  padding: 3rem 2.5rem;
+  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+  position: relative; overflow: hidden; cursor: default;
+}
+.casa-card::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(to right, var(--mid), var(--stone));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.casa-card:hover {
+  transform: translateY(-6px) scale(1.005);
+  box-shadow: 0 32px 64px rgba(26,59,58,0.12);
+}
+.casa-card:hover::after { transform: scaleX(1); }
+.badge {
+  display: inline-block;
+  font-size: 0.58rem; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 0.28rem 0.75rem;
+  background: rgba(63,107,99,0.1); color: var(--mid);
+  border-radius: 2px; margin-bottom: 1.5rem;
+  transition: all 0.4s ease;
+}
+.casa-card:hover .badge { background: var(--dark); color: var(--light-bg); }
+.casa-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 2.2rem; color: var(--dark); line-height: 1; margin-bottom: 0.4rem;
+}
+.casa-subtitle { font-size: 0.82rem; font-weight: 300; color: var(--sec); letter-spacing: 0.05em; margin-bottom: 2rem; }
+.casa-divider { width: 32px; height: 1px; background: var(--stone); margin-bottom: 2rem; }
+.casa-artist { font-size: 0.68rem; font-weight: 400; letter-spacing: 0.12em; color: var(--ter); text-transform: uppercase; margin-bottom: 1.5rem; }
+.casa-highlight {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.78rem; font-weight: 300; color: var(--sec);
+  padding: 0.5rem 1rem;
+  background: var(--light-bg); border-left: 2px solid var(--stone);
+  transition: all 0.4s ease;
+}
+.casa-card:hover .casa-highlight {
+  background: var(--dark); color: var(--light-bg);
+  border-left-color: var(--stone-light);
+}
+
+/* ── ARTE ── */
+#arte { background: var(--bg); }
+.arte-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 2rem; margin-top: 4rem;
+}
+.arte-card {
+  padding: 2.5rem; border: 1px solid rgba(63,107,99,0.12);
+  background: white;
+  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+  display: flex; gap: 2rem; align-items: flex-start;
+}
+.arte-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px rgba(26,59,58,0.1);
+}
+.arte-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--light-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+  border: 2px solid rgba(63,107,99,0.1);
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.arte-card:hover .arte-avatar { transform: rotate(10deg) scale(1.1); }
+.arte-artist-name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.05rem; color: var(--dark); margin-bottom: 0.2rem;
+}
+.arte-location {
+  font-size: 0.62rem; font-weight: 400; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--stone); margin-bottom: 1rem;
+}
+.arte-obra { font-size: 0.78rem; font-weight: 500; color: var(--mid); font-style: italic; margin-bottom: 0.5rem; }
+.arte-desc { font-size: 0.8rem; font-weight: 300; color: var(--sec); line-height: 1.8; }
+
+/* ── TESE ── */
+#tese {
+  background: var(--dark);
+  padding: 7rem 2rem;
+  position: relative; overflow: hidden;
+}
+#tese::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(63,107,99,0.1) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.tese-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+.tese-quote {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  color: var(--light-bg); line-height: 1.3;
+  max-width: 700px; margin-bottom: 4rem;
+}
+.tese-quote em { font-style: italic; color: rgba(242,237,230,0.35); }
+.tese-pillars {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1rem; position: relative;
+}
+.tese-pillar {
+  position: relative; padding: 1.8rem 1.2rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(242,237,230,0.08);
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  cursor: default;
+}
+.tese-pillar:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-6px);
+  border-color: rgba(242,237,230,0.15);
+}
+.tese-pillar-num {
+  font-size: 0.58rem; font-weight: 400; letter-spacing: 0.2em;
+  color: rgba(242,237,230,0.2); margin-bottom: 1rem;
+}
+.tese-pillar-name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 0.95rem; color: var(--light-bg);
+  margin-bottom: 0.5rem; line-height: 1.2;
+}
+.tese-pillar-desc {
+  font-size: 0.72rem; font-weight: 300;
+  color: rgba(242,237,230,0.4); line-height: 1.6;
+}
+.tese-connector {
+  position: absolute; top: 50%; right: -0.5rem;
+  transform: translateY(-50%);
+  color: rgba(242,237,230,0.15); font-size: 0.8rem;
+  display: none;
+}
+
+/* ── ECOSSISTEMA ── */
+#ecossistema { background: var(--light-bg); }
+.eco-cards {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1px; background: rgba(63,107,99,0.1);
+  border: 1px solid rgba(63,107,99,0.1);
+  margin-top: 4rem;
+}
+.eco-item {
+  padding: 2rem 1.2rem; background: white;
+  text-align: center; cursor: default;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.eco-item:hover {
+  background: var(--dark); transform: scale(1.04); z-index: 1;
+  box-shadow: 0 16px 32px rgba(26,59,58,0.15);
+  position: relative;
+}
+.eco-icon { font-size: 1.25rem; margin-bottom: 0.75rem; display: block; transition: transform 0.4s ease; }
+.eco-item:hover .eco-icon { transform: scale(1.15); }
+.eco-name {
+  font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.1em; color: var(--dark);
+  text-transform: uppercase; transition: color 0.4s ease;
+}
+.eco-item:hover .eco-name { color: var(--light-bg); }
+.eco-desc-text {
+  font-size: 0.65rem; font-weight: 300;
+  color: var(--sec); margin-top: 0.4rem; line-height: 1.5;
+  transition: color 0.4s ease;
+}
+.eco-item:hover .eco-desc-text { color: rgba(242,237,230,0.55); }
+
+/* ── CONTATO ── */
+#contact {
+  background: var(--dark); padding: 9rem 2rem;
+  text-align: center; position: relative; overflow: hidden;
+}
+#contact::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(63,107,99,0.1) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.contact-inner { position: relative; max-width: 640px; margin: 0 auto; }
+.contact-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2rem,4vw,3rem);
+  color: var(--light-bg); margin-bottom: 1.5rem; line-height: 1.2;
+}
+.contact-text {
+  font-size: 0.88rem; font-weight: 300;
+  color: rgba(242,237,230,0.5); line-height: 1.9;
+  max-width: 480px; margin: 0 auto 3rem;
+}
+.btn-outline {
+  display: inline-block; padding: 0.9rem 2.8rem;
+  font-family: var(--font-body); font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--light-bg); background: transparent;
+  border: 1px solid rgba(242,237,230,0.35);
+  cursor: pointer; text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  position: relative; overflow: hidden;
+}
+.btn-outline::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--light-bg);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); z-index: 0;
+}
+.btn-outline span { position: relative; z-index: 1; }
+.btn-outline:hover { color: var(--dark); border-color: var(--light-bg); }
+.btn-outline:hover::before { transform: scaleX(1); }
+
+/* ── FOOTER ── */
+.footer {
+  background: #0f2624;
+  border-top: 1px solid rgba(242,237,230,0.07);
+  padding: 2rem 3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-units { display: flex; gap: 2.5rem; }
+.footer-unit {
+  font-size: 0.65rem; font-weight: 300;
+  letter-spacing: 0.08em; color: rgba(242,237,230,0.3); line-height: 1.7;
+}
+.footer-unit strong {
+  display: block; font-weight: 500;
+  color: rgba(242,237,230,0.5); font-size: 0.6rem;
+  letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.3rem;
+}
+.footer-copy {
+  font-size: 0.58rem; letter-spacing: 0.14em;
+  color: rgba(242,237,230,0.2); text-align: right; line-height: 1.7;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-14px); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.35; transform: scaleY(1); }
+  50%       { opacity: 0.8;  transform: scaleY(0.82); }
+}
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.9; }
+}
+
+/* ── REVEAL ── */
+.reveal {
+  opacity: 0; transform: translateY(44px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+              transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.45s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .essencia-cards, .casas-grid, .arte-grid { grid-template-columns: 1fr; }
+  .eco-cards { grid-template-columns: repeat(2, 1fr); }
+  .numbers-grid { grid-template-columns: 1fr; }
+  .tese-pillars { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  nav { padding: 0 1.25rem; }
+  section:not(#hero):not(#manifesto):not(#numbers):not(#contact):not(#tese) { padding: 5rem 1.25rem; }
+  #numbers, #tese, #contact { padding: 5rem 1.25rem; }
+  .eco-cards { grid-template-columns: 1fr; }
+  .arte-card { flex-direction: column; }
+  .footer { flex-direction: column; padding: 1.5rem; }
+  .footer-copy { text-align: left; }
+  .footer-units { flex-direction: column; gap: 1rem; }
+  .tese-pillars { grid-template-columns: 1fr; }
+  .hero-logotype { letter-spacing: 0.1em; }
+}
+
+/* ── MOBILE MENU ── */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 4px; background: none; border: none;
+}
+.hamburger span {
+  display: block; width: 22px; height: 1px;
+  background: var(--dark); transition: all 0.3s ease;
+}
+@media (max-width: 960px) { .hamburger { display: flex; } }
+.mobile-menu {
+  display: none; position: fixed;
+  top: 64px; left: 0; right: 0;
+  background: rgba(249,246,240,0.97);
+  backdrop-filter: blur(14px);
+  padding: 2rem; z-index: 999;
+  border-bottom: 1px solid rgba(63,107,99,0.1);
+}
+.mobile-menu.open { display: block; }
+.mobile-menu a {
+  display: block; padding: 0.75rem 0;
+  font-size: 0.82rem; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sec); text-decoration: none;
+  border-bottom: 1px solid rgba(63,107,99,0.08);
+  transition: color 0.3s ease;
+}
+.mobile-menu a:hover { color: var(--dark); }
+</style>
 </head>
 <body>
 
-    <!-- ═══ PROGRESS BAR ═══ -->
-    <div id="progress-bar"></div>
+<div id="progress-bar"></div>
 
-    <!-- ═══ NAV ═══ -->
-    <nav>
-        <div class="logo">FADE <span>·</span></div>
-        <ul>
-            <li><a href="#essence">Essência</a></li>
-            <li><a href="#units">Unidades</a></li>
-            <li><a href="#art">Arte</a></li>
-            <li><a href="#ecosystem">Ecossistema</a></li>
-            <li><a href="#contact">Contato</a></li>
-        </ul>
-    </nav>
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#hero" class="nav-logo">FADE <span class="dot">·</span></a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#essencia" data-i18n="nav.essencia">Essência</a></li>
+    <li><a href="#casas" data-i18n="nav.casas">Unidades</a></li>
+    <li><a href="#arte" data-i18n="nav.arte">Arte</a></li>
+    <li><a href="#numbers" data-i18n="nav.numbers">Crescimento</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">Contato</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('pt')" id="btn-pt">PT</button>
+      <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
 
-    <!-- ═══ HERO ═══ -->
-    <section id="hero">
-        <div class="container hero-content">
-            <h1>FADE <span>Barber House</span></h1>
-            <div class="tagline">O cuidado é percebido.</div>
-            <a href="#essence" class="btn">Conhecer a marca</a>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#essencia" data-i18n="nav.essencia" onclick="closeMobileMenu()">Essência</a>
+  <a href="#casas" data-i18n="nav.casas" onclick="closeMobileMenu()">Unidades</a>
+  <a href="#arte" data-i18n="nav.arte" onclick="closeMobileMenu()">Arte</a>
+  <a href="#numbers" data-i18n="nav.numbers" onclick="closeMobileMenu()">Crescimento</a>
+  <a href="#contact" data-i18n="nav.contact" onclick="closeMobileMenu()">Contato</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="ss-base"></div>
+  <div class="ss-grain"></div>
+  <div class="ss-veins"></div>
+  <div class="ss-micro"></div>
+  <div class="ss-overlay"></div>
+  <div class="hero-dots" id="hero-dots"></div>
+
+  <div class="hero-content hero-float">
+    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Rio de Janeiro · Barbearia</p>
+    <div>
+      <div class="hero-logotype">FADE</div>
+      <span class="hero-barber-house" data-i18n="hero.subtitle">Barber House</span>
+    </div>
+    <div class="hero-tagline-wrap">
+      <div class="hero-tagline-line"></div>
+      <p class="hero-tagline" data-i18n="hero.tagline">O cuidado é percebido.</p>
+    </div>
+    <div class="hero-cta">
+      <a href="#essencia" class="btn-stone" data-i18n="hero.cta">Conhecer a marca</a>
+      <a href="#numbers" class="btn-ghost" data-i18n="hero.cta2">Ver projeção</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll-indicator">
+    <span class="scroll-label" data-i18n="hero.scroll">Explorar</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <div class="reveal">
+    <p class="manifesto-text">
+      <span data-i18n="manifesto.line1">Não abrimos lojas.</span><br>
+      <em data-i18n="manifesto.line2">Entramos em bairros.</em>
+    </p>
+    <p class="manifesto-sub" data-i18n="manifesto.sub">FADE Barber House — Rio de Janeiro</p>
+  </div>
+</section>
+
+<!-- ESSÊNCIA -->
+<section id="essencia">
+  <div class="section-inner">
+    <div class="essencia-intro reveal">
+      <p class="section-eyebrow" data-i18n="essencia.eyebrow">O que somos</p>
+      <h2 class="section-title" data-i18n="essencia.title">Uma marca,<br>muitas casas.</h2>
+      <p class="section-sub" data-i18n="essencia.sub">A FADE é uma coleção de casas, cada uma refletindo seu território — unidas pelo mesmo cuidado, pela mesma presença, pelo mesmo compromisso com quem entra pela porta.</p>
+    </div>
+    <div class="essencia-cards">
+      <div class="essence-card reveal reveal-delay-1">
+        <span class="card-icon">🌿</span>
+        <h3 class="card-title" data-i18n="card1.title">Essência</h3>
+        <p class="card-text" data-i18n="card1.text">O cuidado é percebido. Hospitalidade sem pressa. Materiais naturais. Cultura forte. Arte com propósito.</p>
+      </div>
+      <div class="essence-card reveal reveal-delay-2">
+        <span class="card-icon">📍</span>
+        <h3 class="card-title" data-i18n="card2.title">Território</h3>
+        <p class="card-text" data-i18n="card2.text">Cada unidade se adapta ao lugar onde nasce. Arquitetura, plantas, artistas e comunidade locais.</p>
+      </div>
+      <div class="essence-card reveal reveal-delay-3">
+        <span class="card-icon">🤝</span>
+        <h3 class="card-title" data-i18n="card3.title">Comunidade</h3>
+        <p class="card-text" data-i18n="card3.text">Não abrimos lojas. Entramos em bairros. A comunidade é quem adota a marca e a faz crescer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASAS -->
+<section id="casas">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-eyebrow" data-i18n="casas.eyebrow">Guaratiba e Centro</p>
+      <h2 class="section-title" data-i18n="casas.title">Nossas casas.</h2>
+      <p class="section-sub" data-i18n="casas.sub">Cada unidade tem sua própria personalidade, mas todas compartilham a mesma verdade.</p>
+    </div>
+    <div class="casas-grid">
+      <div class="casa-card reveal reveal-delay-1">
+        <div class="badge" data-i18n="casa1.badge">Origem</div>
+        <h3 class="casa-title">Guaratiba</h3>
+        <p class="casa-subtitle" data-i18n="casa1.subtitle">A Casa da Natureza</p>
+        <div class="casa-divider"></div>
+        <p class="casa-artist" data-i18n="casa1.artist">Artista: Nobru Werneck</p>
+        <div class="casa-highlight"><span>🌳</span><span data-i18n="casa1.highlight">Jabuticabeira · Mata Atlântica</span></div>
+      </div>
+      <div class="casa-card reveal reveal-delay-2">
+        <div class="badge" data-i18n="casa2.badge">História</div>
+        <h3 class="casa-title">Centro</h3>
+        <p class="casa-subtitle" data-i18n="casa2.subtitle">A Casa da História</p>
+        <div class="casa-divider"></div>
+        <p class="casa-artist" data-i18n="casa2.artist">Artista: Vins Ayres</p>
+        <div class="casa-highlight"><span>🏛️</span><span data-i18n="casa2.highlight">Pé-direito alto · Patrimônio</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTE -->
+<section id="arte">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-eyebrow" data-i18n="arte.eyebrow">Patrimônio vivo</p>
+      <h2 class="section-title" data-i18n="arte.title">Arte como identidade.</h2>
+      <p class="section-sub" data-i18n="arte.sub">Cada unidade da FADE recebe uma obra permanente criada por um artista local. Não é decoração. É patrimônio da marca.</p>
+    </div>
+    <div class="arte-grid">
+      <div class="arte-card reveal reveal-delay-1">
+        <div class="arte-avatar">🌳</div>
+        <div class="arte-body">
+          <p class="arte-artist-name">Nobru Werneck</p>
+          <p class="arte-location" data-i18n="arte1.location">Guaratiba · Zona Oeste</p>
+          <p class="arte-obra" data-i18n="arte1.obra">"Violentamente Pacífico"</p>
+          <p class="arte-desc" data-i18n="arte1.desc">Pintura orgânica inspirada na paisagem da Zona Oeste — telas que respiram com o território e falam de uma beleza que não pede licença.</p>
         </div>
-        <div class="hero-image">
-            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#1a3b3a" stroke-width="1.2" />
-                <circle cx="100" cy="100" r="50" fill="none" stroke="#1a3b3a" stroke-width="1" />
-                <circle cx="100" cy="100" r="25" fill="#1a3b3a" opacity="0.08" />
-            </svg>
+      </div>
+      <div class="arte-card reveal reveal-delay-2">
+        <div class="arte-avatar">✍️</div>
+        <div class="arte-body">
+          <p class="arte-artist-name">Vins Ayres</p>
+          <p class="arte-location" data-i18n="arte2.location">Centro · Rio Antigo</p>
+          <p class="arte-obra" data-i18n="arte2.obra">"A Palavra como Presença"</p>
+          <p class="arte-desc" data-i18n="arte2.desc">Lettering autoral que celebra a história do Rio — cada traço é uma memória da cidade que não deve ser esquecida.</p>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ═══ ESSÊNCIA ═══ -->
-    <section id="essence">
-        <div class="container">
-            <h2>Uma marca, muitas casas</h2>
-            <p class="section-sub">
-                A FADE não será uma rede de barbearias. Será uma coleção de casas. Cada casa refletirá o território onde nasceu. Cada casa contará uma história diferente. Uma única verdade as une: o cuidado é percebido.
-            </p>
-            <div class="grid-3">
-                <div class="card">
-                    <div class="icon">🌿</div>
-                    <h3>Essência</h3>
-                    <p>O cuidado é percebido. Hospitalidade sem pressa. Materiais naturais. Cultura forte. Arte com propósito.</p>
-                </div>
-                <div class="card">
-                    <div class="icon">📍</div>
-                    <h3>Território</h3>
-                    <p>Cada unidade se adapta ao lugar onde nasce. Arquitetura, plantas, artistas e comunidade locais.</p>
-                </div>
-                <div class="card">
-                    <div class="icon">🤝</div>
-                    <h3>Comunidade</h3>
-                    <p>Não abrimos lojas. Entramos em bairros. A comunidade é quem adota a marca e a faz crescer.</p>
-                </div>
-            </div>
+<!-- NUMBERS -->
+<section id="numbers">
+  <div class="numbers-inner reveal">
+    <p class="numbers-label" data-i18n="numbers.label">Projeção de crescimento</p>
+    <div class="numbers-grid">
+      <div class="number-col">
+        <p class="number-col-head" data-i18n="numbers.hoje">Hoje</p>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.faturamento">Faturamento anual</p>
+          <p class="number-value">R$ 300K</p>
         </div>
-    </section>
-
-    <!-- ═══ UNIDADES ═══ -->
-    <section id="units">
-        <div class="container text-center">
-            <h2>Nossas casas</h2>
-            <p class="section-sub">Cada unidade tem sua própria personalidade, mas todas compartilham a mesma verdade.</p>
-            <div class="units-grid">
-                <div class="unit-card">
-                    <span class="badge">Origem</span>
-                    <h4>Guaratiba</h4>
-                    <div class="sub">A Casa da Natureza</div>
-                    <div class="artist">Artista: Nobru Werneck</div>
-                    <div class="highlight">🌳 Jabuticabeira · Mata Atlântica</div>
-                </div>
-                <div class="unit-card">
-                    <span class="badge">História</span>
-                    <h4>Centro</h4>
-                    <div class="sub">A Casa da História</div>
-                    <div class="artist">Artista: Vins Ayres</div>
-                    <div class="highlight">🏛️ Pé-direito alto · Patrimônio</div>
-                </div>
-            </div>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.unidades">Unidades próprias</p>
+          <p class="number-value">1</p>
         </div>
-    </section>
-
-    <!-- ═══ ARTE ═══ -->
-    <section id="art">
-        <div class="container text-center">
-            <h2>Arte como identidade</h2>
-            <p class="section-sub">Cada unidade da FADE recebe uma obra permanente criada por um artista local. Não é decoração. É patrimônio da marca.</p>
-            <div class="artist-grid">
-                <div class="artist-card">
-                    <div class="avatar">🌳</div>
-                    <h4>Nobru Werneck</h4>
-                    <div class="role">Guaratiba</div>
-                    <div class="desc">"Violentamente Pacífico" — pintura orgânica inspirada na paisagem da Zona Oeste.</div>
-                </div>
-                <div class="artist-card">
-                    <div class="avatar">✍️</div>
-                    <h4>Vins Ayres</h4>
-                    <div class="role">Centro</div>
-                    <div class="desc">"A Palavra como Presença" — lettering autoral que celebra a história do Rio.</div>
-                </div>
-            </div>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.ticket">Ticket médio</p>
+          <p class="number-value">R$ 80</p>
         </div>
-    </section>
-
-    <!-- ═══ ECOSSISTEMA ═══ -->
-    <section id="ecosystem">
-        <div class="container text-center">
-            <h2>Um ecossistema de cuidado</h2>
-            <p class="section-sub">Mais do que uma barbearia. Uma plataforma de marca.</p>
-            <div class="eco-flow">
-                <span class="eco-item">FADE Barber House</span>
-                <span class="eco-arrow">→</span>
-                <span class="eco-item">FADE Platform</span>
-                <span class="eco-arrow">→</span>
-                <span class="eco-item">FADE Academy</span>
-                <span class="eco-arrow">→</span>
-                <span class="eco-item">Produtos próprios</span>
-                <span class="eco-arrow">→</span>
-                <span class="eco-item">Comunidade</span>
-            </div>
-            <p style="margin-top: 40px; color: #4d6b63; text-align: center; font-size: 0.95rem; max-width: 640px; margin-left: auto; margin-right: auto;">
-                Cada elemento fortalece os outros. A barbearia gera relacionamento. A plataforma gera inteligência. A academia gera padronização. A comunidade gera recorrência.
-            </p>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.clientes">Clientes ativos</p>
+          <p class="number-value">400</p>
         </div>
-    </section>
-
-    <!-- ═══ CONTATO ═══ -->
-    <section id="contact">
-        <div class="container text-center">
-            <h2 style="color: #f2ede6;">Construa essa história com a gente</h2>
-            <p style="max-width: 520px; margin: 12px auto 0; color: #b6cbc4;">
-                A FADE está construindo a infraestrutura do cuidado masculino no Brasil. Esse é o convite.
-            </p>
-            <a href="#" class="btn-outline">Quero conhecer</a>
+      </div>
+      <div class="number-col active">
+        <p class="number-col-head" data-i18n="numbers.ano3">Ano 3</p>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.faturamento">Faturamento anual</p>
+          <p class="number-value highlight">R$ 2M</p>
         </div>
-    </section>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.unidades">Unidades próprias</p>
+          <p class="number-value highlight">3</p>
+        </div>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.ticket">Ticket médio</p>
+          <p class="number-value highlight">R$ 95</p>
+        </div>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.clientes">Clientes ativos</p>
+          <p class="number-value highlight">1.500</p>
+        </div>
+      </div>
+      <div class="number-col">
+        <p class="number-col-head" data-i18n="numbers.ano5">Ano 5</p>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.faturamento">Faturamento anual</p>
+          <p class="number-value">R$ 6M</p>
+        </div>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.unidades">Unidades próprias</p>
+          <p class="number-value">5</p>
+        </div>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.ticket">Ticket médio</p>
+          <p class="number-value">R$ 110</p>
+        </div>
+        <div class="number-row">
+          <p class="number-indicator" data-i18n="numbers.clientes">Clientes ativos</p>
+          <p class="number-value">4.000</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ═══ SCRIPTS ═══ -->
-    <script>
-        // ═══ PROGRESS BAR ═══
-        window.addEventListener('scroll', function() {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (scrollTop / docHeight) * 100;
-            document.getElementById('progress-bar').style.width = progress + '%';
+<!-- TESE -->
+<section id="tese">
+  <div class="tese-inner">
+    <div class="tese-quote reveal">
+      <span data-i18n="tese.line1">Não estamos construindo apenas uma barbearia.</span><br>
+      <em data-i18n="tese.line2">Estamos construindo um ecossistema.</em>
+    </div>
+    <div class="tese-pillars">
+      <div class="tese-pillar reveal reveal-delay-1">
+        <p class="tese-pillar-num">01</p>
+        <p class="tese-pillar-name" data-i18n="tese1.name">Barber House</p>
+        <p class="tese-pillar-desc" data-i18n="tese1.desc">Gera relacionamento e receita presencial</p>
+      </div>
+      <div class="tese-pillar reveal reveal-delay-2">
+        <p class="tese-pillar-num">02</p>
+        <p class="tese-pillar-name" data-i18n="tese2.name">Platform</p>
+        <p class="tese-pillar-desc" data-i18n="tese2.desc">Gera inteligência. Escalável e licenciável</p>
+      </div>
+      <div class="tese-pillar reveal reveal-delay-3">
+        <p class="tese-pillar-num">03</p>
+        <p class="tese-pillar-name" data-i18n="tese3.name">Academy</p>
+        <p class="tese-pillar-desc" data-i18n="tese3.desc">Gera padronização e profissionais FADE</p>
+      </div>
+      <div class="tese-pillar reveal reveal-delay-4">
+        <p class="tese-pillar-num">04</p>
+        <p class="tese-pillar-name" data-i18n="tese4.name">Produtos</p>
+        <p class="tese-pillar-desc" data-i18n="tese4.desc">Gera receita recorrente e presença diária</p>
+      </div>
+      <div class="tese-pillar reveal reveal-delay-4">
+        <p class="tese-pillar-num">05</p>
+        <p class="tese-pillar-name" data-i18n="tese5.name">Comunidade</p>
+        <p class="tese-pillar-desc" data-i18n="tese5.desc">Reduz CAC e amplifica a marca</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 80) {
-                nav.style.background = 'rgba(249, 246, 240, 0.95)';
-                nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.04)';
-            } else {
-                nav.style.background = 'rgba(249, 246, 240, 0.85)';
-                nav.style.boxShadow = 'none';
-            }
-        });
+<!-- ECOSSISTEMA -->
+<section id="ecossistema">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-eyebrow" data-i18n="eco.eyebrow">Plataforma de marca</p>
+      <h2 class="section-title" data-i18n="eco.title">Um ecossistema<br>de cuidado.</h2>
+      <p class="section-sub" data-i18n="eco.sub">Mais do que uma barbearia. Uma plataforma que cresce com sua comunidade.</p>
+    </div>
+    <div class="eco-cards">
+      <div class="eco-item reveal reveal-delay-1">
+        <span class="eco-icon">🏠</span>
+        <p class="eco-name" data-i18n="eco1.name">Barber House</p>
+        <p class="eco-desc-text" data-i18n="eco1.desc">A experiência presencial</p>
+      </div>
+      <div class="eco-item reveal reveal-delay-2">
+        <span class="eco-icon">⚙️</span>
+        <p class="eco-name" data-i18n="eco2.name">Platform</p>
+        <p class="eco-desc-text" data-i18n="eco2.desc">Tecnologia e gestão</p>
+      </div>
+      <div class="eco-item reveal reveal-delay-3">
+        <span class="eco-icon">🎓</span>
+        <p class="eco-name" data-i18n="eco3.name">Academy</p>
+        <p class="eco-desc-text" data-i18n="eco3.desc">Formação de profissionais</p>
+      </div>
+      <div class="eco-item reveal reveal-delay-4">
+        <span class="eco-icon">🧴</span>
+        <p class="eco-name" data-i18n="eco4.name">Produtos</p>
+        <p class="eco-desc-text" data-i18n="eco4.desc">Linha própria FADE</p>
+      </div>
+      <div class="eco-item reveal reveal-delay-4">
+        <span class="eco-icon">🌱</span>
+        <p class="eco-name" data-i18n="eco5.name">Comunidade</p>
+        <p class="eco-desc-text" data-i18n="eco5.desc">O coração da marca</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // ═══ SMOOTH SCROLL ═══
-        document.querySelectorAll('nav a[href^="#"]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <p class="section-eyebrow" style="color:rgba(242,237,230,0.3);margin-bottom:1.5rem" data-i18n="contact.eyebrow">O convite</p>
+    <h2 class="contact-title" data-i18n="contact.title">Construa essa história<br>com a gente.</h2>
+    <p class="contact-text" data-i18n="contact.text">A FADE está construindo a infraestrutura do cuidado masculino no Brasil. Esse é o convite.</p>
+    <a href="mailto:contato@fadebarberhouse.com.br" class="btn-outline"><span data-i18n="contact.cta">Quero conhecer</span></a>
+  </div>
+</section>
 
-        // ═══ PARALLAX NO HERO (opcional) ═══
-        window.addEventListener('scroll', function() {
-            const hero = document.getElementById('hero');
-            const scrolled = window.scrollY;
-            if (hero) {
-                hero.style.backgroundPositionY = scrolled * 0.1 + 'px';
-            }
-        });
-    </script>
+<footer class="footer">
+  <div class="footer-units">
+    <div class="footer-unit">
+      <strong data-i18n="footer.guaratiba">FADE Guaratiba</strong>
+      <span data-i18n="footer.guaratiba.addr">Guaratiba, Rio de Janeiro</span>
+    </div>
+    <div class="footer-unit">
+      <strong data-i18n="footer.centro">FADE Centro</strong>
+      <span data-i18n="footer.centro.addr">Centro Histórico, Rio de Janeiro</span>
+    </div>
+  </div>
+  <div class="footer-copy">
+    <p>Rio de Janeiro · Brasil</p>
+    <p style="margin-top:0.2rem">© FADE Barber House</p>
+  </div>
+</footer>
+
+<script>
+// ── i18n ──
+const translations = {
+  pt: {
+    'nav.essencia':'Essência','nav.casas':'Unidades','nav.arte':'Arte',
+    'nav.numbers':'Crescimento','nav.contact':'Contato',
+    'hero.eyebrow':'Rio de Janeiro · Barbearia','hero.subtitle':'Barber House',
+    'hero.tagline':'O cuidado é percebido.','hero.cta':'Conhecer a marca',
+    'hero.cta2':'Ver projeção','hero.scroll':'Explorar',
+    'manifesto.line1':'Não abrimos lojas.','manifesto.line2':'Entramos em bairros.',
+    'manifesto.sub':'FADE Barber House — Rio de Janeiro',
+    'essencia.eyebrow':'O que somos','essencia.title':'Uma marca,<br>muitas casas.',
+    'essencia.sub':'A FADE é uma coleção de casas, cada uma refletindo seu território — unidas pelo mesmo cuidado, pela mesma presença, pelo mesmo compromisso com quem entra pela porta.',
+    'card1.title':'Essência','card1.text':'O cuidado é percebido. Hospitalidade sem pressa. Materiais naturais. Cultura forte. Arte com propósito.',
+    'card2.title':'Território','card2.text':'Cada unidade se adapta ao lugar onde nasce. Arquitetura, plantas, artistas e comunidade locais.',
+    'card3.title':'Comunidade','card3.text':'Não abrimos lojas. Entramos em bairros. A comunidade é quem adota a marca e a faz crescer.',
+    'casas.eyebrow':'Guaratiba e Centro','casas.title':'Nossas casas.',
+    'casas.sub':'Cada unidade tem sua própria personalidade, mas todas compartilham a mesma verdade.',
+    'casa1.badge':'Origem','casa1.subtitle':'A Casa da Natureza',
+    'casa1.artist':'Artista: Nobru Werneck','casa1.highlight':'Jabuticabeira · Mata Atlântica',
+    'casa2.badge':'História','casa2.subtitle':'A Casa da História',
+    'casa2.artist':'Artista: Vins Ayres','casa2.highlight':'Pé-direito alto · Patrimônio',
+    'arte.eyebrow':'Patrimônio vivo','arte.title':'Arte como identidade.',
+    'arte.sub':'Cada unidade da FADE recebe uma obra permanente criada por um artista local. Não é decoração. É patrimônio da marca.',
+    'arte1.location':'Guaratiba · Zona Oeste','arte1.obra':'"Violentamente Pacífico"',
+    'arte1.desc':'Pintura orgânica inspirada na paisagem da Zona Oeste — telas que respiram com o território e falam de uma beleza que não pede licença.',
+    'arte2.location':'Centro · Rio Antigo','arte2.obra':'"A Palavra como Presença"',
+    'arte2.desc':'Lettering autoral que celebra a história do Rio — cada traço é uma memória da cidade que não deve ser esquecida.',
+    'numbers.label':'Projeção de crescimento','numbers.hoje':'Hoje',
+    'numbers.ano3':'Ano 3','numbers.ano5':'Ano 5',
+    'numbers.faturamento':'Faturamento anual','numbers.unidades':'Unidades próprias',
+    'numbers.ticket':'Ticket médio','numbers.clientes':'Clientes ativos',
+    'tese.line1':'Não estamos construindo apenas uma barbearia.','tese.line2':'Estamos construindo um ecossistema.',
+    'tese1.name':'Barber House','tese1.desc':'Gera relacionamento e receita presencial',
+    'tese2.name':'Platform','tese2.desc':'Gera inteligência. Escalável e licenciável',
+    'tese3.name':'Academy','tese3.desc':'Gera padronização e profissionais FADE',
+    'tese4.name':'Produtos','tese4.desc':'Gera receita recorrente e presença diária',
+    'tese5.name':'Comunidade','tese5.desc':'Reduz CAC e amplifica a marca',
+    'eco.eyebrow':'Plataforma de marca','eco.title':'Um ecossistema<br>de cuidado.',
+    'eco.sub':'Mais do que uma barbearia. Uma plataforma que cresce com sua comunidade.',
+    'eco1.name':'Barber House','eco1.desc':'A experiência presencial',
+    'eco2.name':'Platform','eco2.desc':'Tecnologia e gestão',
+    'eco3.name':'Academy','eco3.desc':'Formação de profissionais',
+    'eco4.name':'Produtos','eco4.desc':'Linha própria FADE',
+    'eco5.name':'Comunidade','eco5.desc':'O coração da marca',
+    'contact.eyebrow':'O convite','contact.title':'Construa essa história<br>com a gente.',
+    'contact.text':'A FADE está construindo a infraestrutura do cuidado masculino no Brasil. Esse é o convite.',
+    'contact.cta':'Quero conhecer',
+    'footer.guaratiba':'FADE Guaratiba','footer.guaratiba.addr':'Guaratiba, Rio de Janeiro',
+    'footer.centro':'FADE Centro','footer.centro.addr':'Centro Histórico, Rio de Janeiro'
+  },
+  en: {
+    'nav.essencia':'Essence','nav.casas':'Houses','nav.arte':'Art',
+    'nav.numbers':'Growth','nav.contact':'Contact',
+    'hero.eyebrow':'Rio de Janeiro · Barbershop','hero.subtitle':'Barber House',
+    'hero.tagline':'Care is perceived.','hero.cta':'Discover the brand',
+    'hero.cta2':'See projection','hero.scroll':'Explore',
+    'manifesto.line1':"We don't open stores.",'manifesto.line2':'We enter neighborhoods.',
+    'manifesto.sub':'FADE Barber House — Rio de Janeiro',
+    'essencia.eyebrow':'Who we are','essencia.title':'One brand,<br>many houses.',
+    'essencia.sub':'FADE is a collection of houses, each reflecting its own territory — united by the same care, the same presence, the same commitment to everyone who walks through the door.',
+    'card1.title':'Essence','card1.text':'Care is perceived. Unhurried hospitality. Natural materials. Strong culture. Art with purpose.',
+    'card2.title':'Territory','card2.text':'Each location adapts to where it is born. Local architecture, plants, artists and community.',
+    'card3.title':'Community','card3.text':"We don't open stores. We enter neighborhoods. The community adopts the brand and makes it grow.",
+    'casas.eyebrow':'Guaratiba & Centro','casas.title':'Our houses.',
+    'casas.sub':'Each location has its own personality, but all share the same truth.',
+    'casa1.badge':'Origin','casa1.subtitle':'The House of Nature',
+    'casa1.artist':'Artist: Nobru Werneck','casa1.highlight':'Jabuticaba tree · Atlantic Forest',
+    'casa2.badge':'History','casa2.subtitle':'The House of History',
+    'casa2.artist':'Artist: Vins Ayres','casa2.highlight':'High ceilings · Heritage',
+    'arte.eyebrow':'Living heritage','arte.title':'Art as identity.',
+    'arte.sub':"Each FADE location receives a permanent work created by a local artist. It's not decoration. It's brand heritage.",
+    'arte1.location':'Guaratiba · West Zone','arte1.obra':'"Violentamente Pacífico"',
+    'arte1.desc':'Organic painting inspired by the West Zone landscape — canvases that breathe with the territory and speak of a beauty that asks no permission.',
+    'arte2.location':'Centro · Old Rio','arte2.obra':'"A Palavra como Presença"',
+    'arte2.desc':'Original lettering that celebrates the history of Rio — every stroke is a memory of a city that must not be forgotten.',
+    'numbers.label':'Growth projection','numbers.hoje':'Today',
+    'numbers.ano3':'Year 3','numbers.ano5':'Year 5',
+    'numbers.faturamento':'Annual revenue','numbers.unidades':'Own locations',
+    'numbers.ticket':'Average ticket','numbers.clientes':'Active clients',
+    'tese.line1':"We are not building just a barbershop.",'tese.line2':'We are building an ecosystem.',
+    'tese1.name':'Barber House','tese1.desc':'Generates relationships and in-person revenue',
+    'tese2.name':'Platform','tese2.desc':'Generates intelligence. Scalable and licensable',
+    'tese3.name':'Academy','tese3.desc':'Generates standardization and FADE professionals',
+    'tese4.name':'Products','tese4.desc':'Generates recurring revenue and daily presence',
+    'tese5.name':'Community','tese5.desc':'Reduces CAC and amplifies the brand',
+    'eco.eyebrow':'Brand platform','eco.title':'An ecosystem<br>of care.',
+    'eco.sub':'More than a barbershop. A platform that grows with its community.',
+    'eco1.name':'Barber House','eco1.desc':'The in-person experience',
+    'eco2.name':'Platform','eco2.desc':'Technology & operations',
+    'eco3.name':'Academy','eco3.desc':'Professional training',
+    'eco4.name':'Products','eco4.desc':'FADE own line',
+    'eco5.name':'Community','eco5.desc':'The heart of the brand',
+    'contact.eyebrow':'The invitation','contact.title':'Build this story<br>with us.',
+    'contact.text':'FADE is building the infrastructure of masculine care in Brazil. This is the invitation.',
+    'contact.cta':'I want to know more',
+    'footer.guaratiba':'FADE Guaratiba','footer.guaratiba.addr':'Guaratiba, Rio de Janeiro',
+    'footer.centro':'FADE Centro','footer.centro.addr':'Historic Center, Rio de Janeiro'
+  }
+};
+
+let currentLang = 'pt';
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelector('#btn-pt').classList.toggle('active', lang === 'pt');
+  document.querySelector('#btn-en').classList.toggle('active', lang === 'en');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = translations[lang][key];
+    if (val !== undefined) el.innerHTML = val;
+  });
+  document.documentElement.lang = lang;
+}
+
+// Progress bar
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  const pct = (d.scrollTop || document.body.scrollTop) / (d.scrollHeight - d.clientHeight) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+// Parallax dots
+window.addEventListener('scroll', () => {
+  const dots = document.getElementById('hero-dots');
+  if (dots) dots.style.transform = `translateY(${window.pageYOffset * 0.18}px)`;
+}, { passive: true });
+
+// Reveal on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Eco float stagger
+document.querySelectorAll('.eco-item').forEach((item, i) => {
+  item.style.animation = `float ${3.2 + i * 0.25}s ease-in-out ${i * 0.12}s infinite`;
+});
+
+// Mobile menu
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.toggle('open');
+});
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('mobile-menu');
+  const burger = document.getElementById('hamburger');
+  if (!menu.contains(e.target) && !burger.contains(e.target)) menu.classList.remove('open');
+});
+</script>
 </body>
 </html>
